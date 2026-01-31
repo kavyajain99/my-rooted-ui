@@ -30,8 +30,11 @@ export function MoodInput({ onResultsFound }: MoodInputProps) {
       })
 
       const data = await response.json()
+      console.log("[v0] MoodInput API response:", data)
+      console.log("[v0] MoodInput data.events:", data.events)
 
       if (data.events) {
+        console.log("[v0] MoodInput calling onResultsFound with", data.events.length, "events")
         // This is the magic line that sends the data back up to the Calendar Page!
         onResultsFound(data.events) 
       } else {
