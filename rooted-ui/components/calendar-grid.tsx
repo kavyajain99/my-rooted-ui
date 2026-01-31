@@ -48,13 +48,13 @@ export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridP
   const config = MONTH_CONFIG[month]
   const totalCells = Math.ceil((config.startDay + config.daysInMonth) / 7) * 7
   
-  // Debug: Log events received to see their date formats
-  console.log("[v0] CalendarGrid received events:", events.map(e => ({
-    id: e.id,
-    title: e.title,
-    event_date: e.event_date,
-    event_date_type: typeof e.event_date
-  })))
+  // Debug: Log events with their exact dates
+  console.log("[v0] CalendarGrid events with dates:")
+  events.forEach(e => {
+    const dateOnly = String(e.event_date).slice(0, 10)
+    console.log(`  - "${e.title}" => event_date="${e.event_date}" => dateOnly="${dateOnly}"`)
+  })
+  console.log(`[v0] Calendar showing: ${month} ${config.year} (monthIdx: ${config.monthIdx})`)
   
   const cells = Array.from({ length: totalCells }, (_, index) => {
     const dayNumber = index - config.startDay + 1
