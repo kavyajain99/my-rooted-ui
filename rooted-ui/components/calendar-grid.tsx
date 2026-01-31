@@ -48,6 +48,14 @@ export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridP
   const config = MONTH_CONFIG[month]
   const totalCells = Math.ceil((config.startDay + config.daysInMonth) / 7) * 7
   
+  // Debug: Log events received to see their date formats
+  console.log("[v0] CalendarGrid received events:", events.map(e => ({
+    id: e.id,
+    title: e.title,
+    event_date: e.event_date,
+    event_date_type: typeof e.event_date
+  })))
+  
   const cells = Array.from({ length: totalCells }, (_, index) => {
     const dayNumber = index - config.startDay + 1
     return dayNumber > 0 && dayNumber <= config.daysInMonth ? dayNumber : null
@@ -78,21 +86,26 @@ export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridP
         {/* Calendar cells */}
         <div className="grid grid-cols-7">
           {cells.map((day, index) => {
-            // THE FIX: We split the date string to get exact Year/Month/Day 
-            // to prevent the "Missing 3rd Event" time-zone shift.
+            // Robust date matching that handles multiple date formats from Supabase
             const dayEvents = events.filter((e) => {
               if (!e.event_date || !day) return false
 
-              // 1. Format the grid day to match DB format (YYYY-MM-DD)
-              // We pad with a leading zero if the day/month is a single digit
+              // Build the target date string for this calendar cell
               const year = config.year
               const monthStr = String(config.monthIdx + 1).padStart(2, '0')
               const dayStr = String(day).padStart(2, '0')
-              const dateString = `${year}-${monthStr}-${dayStr}`
+              const targetDate = `${year}-${monthStr}-${dayStr}`
 
-              // 2. Direct string comparison
-              // This ignores time zones entirely. If the text matches, the event shows up.
-              return e.event_date.startsWith(dateString)
+              // Normalize the event date - extract just the YYYY-MM-DD portion
+              // This handles formats like:
+              // - "2026-02-01"
+              // - "2026-02-01T00:00:00"
+              // - "2026-02-01T00:00:00.000Z"
+              // - "2026-02-01T00:00:00+00:00"
+              const eventDateStr = String(e.event_date)
+              const eventDateOnly = eventDateStr.slice(0, 10) // Get first 10 chars: YYYY-MM-DD
+
+              return eventDateOnly === targetDate
             })
 
             const isWeekend = index % 7 === 0 || index % 7 === 6
