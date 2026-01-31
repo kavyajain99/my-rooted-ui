@@ -12,12 +12,26 @@ export default function CalendarPage() {
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null)
 
   const handleResults = (newEvents: any[]) => {
+    // Debug: Log the raw events from Supabase
+    console.log("[v0] Raw events from API:", newEvents.map(e => ({
+      id: e.id,
+      title: e.title,
+      event_date: e.event_date,
+    })))
+    
     // Map the Supabase data to the format the CalendarGrid expects
     const formatted = newEvents.map(e => ({
       ...e,
       // Map energy to vibe color keys
       vibe: e.social_energy?.toLowerCase().includes('high') ? 'kinetic' : 'parallel' 
     }))
+    
+    console.log("[v0] Formatted events for calendar:", formatted.map(e => ({
+      id: e.id,
+      title: e.title,
+      event_date: e.event_date,
+    })))
+    
     setEvents(formatted)
   }
 
