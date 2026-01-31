@@ -97,16 +97,21 @@ export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridP
               const targetDate = `${year}-${monthStr}-${dayStr}`
 
               // Normalize the event date - extract just the YYYY-MM-DD portion
-              // This handles formats like:
-              // - "2026-02-01"
-              // - "2026-02-01T00:00:00"
-              // - "2026-02-01T00:00:00.000Z"
-              // - "2026-02-01T00:00:00+00:00"
               const eventDateStr = String(e.event_date)
-              const eventDateOnly = eventDateStr.slice(0, 10) // Get first 10 chars: YYYY-MM-DD
+              const eventDateOnly = eventDateStr.slice(0, 10)
+
+              // Debug: Log each comparison for day 1 to see what's happening
+              if (day === 1) {
+                console.log(`[v0] Comparing event "${e.title}": eventDateOnly="${eventDateOnly}" vs targetDate="${targetDate}" => match=${eventDateOnly === targetDate}`)
+              }
 
               return eventDateOnly === targetDate
             })
+            
+            // Debug: Log when events are found for any day
+            if (dayEvents.length > 0) {
+              console.log(`[v0] Day ${day} has ${dayEvents.length} events:`, dayEvents.map(e => e.title))
+            }
 
             const isWeekend = index % 7 === 0 || index % 7 === 6
             const dominantVibe = dayEvents.length > 0 ? getVibeFromEnergy(dayEvents[0].social_energy) : null
