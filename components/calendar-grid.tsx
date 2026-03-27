@@ -1,7 +1,7 @@
 "use client"
 
 interface CalendarGridProps {
-  month: "january" | "february"
+  month: "april"
   onEventClick: (event: any) => void
   events: any[]
 }
@@ -9,8 +9,7 @@ interface CalendarGridProps {
 const DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
 const MONTH_CONFIG = {
-  january: { year: 2026, daysInMonth: 31, startDay: 4, monthIdx: 0 },
-  february: { year: 2026, daysInMonth: 28, startDay: 0, monthIdx: 1 },
+  april: { year: 2026, daysInMonth: 30, startDay: 3, monthIdx: 3 },
 }
 
 function getVibeFromEnergy(energyData: any): string {
@@ -98,7 +97,7 @@ export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridP
             return (
               <div
                 key={index}
-                className={`min-h-[120px] border-b border-r border-border p-3 transition-all duration-300 ${
+                className={`min-h-[160px] border-b border-r border-border p-3 transition-all duration-300 ${
                   day ? (dominantVibe ? getVibeBgColor(dominantVibe) : "bg-card/40") : "bg-muted/5"
                 }`}
               >
@@ -115,7 +114,7 @@ export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridP
                             className="group flex w-full items-start gap-2 text-left"
                           >
                             <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${getVibeColor(vibe)} shadow-sm transition-transform group-hover:scale-125`} />
-                            <span className="text-[10px] leading-tight font-semibold line-clamp-2 text-[#2F3E46] group-hover:text-primary transition-colors uppercase tracking-tight">
+                            <span className="text-[11px] leading-tight font-semibold line-clamp-3 text-[#2F3E46] group-hover:text-primary transition-colors uppercase tracking-tight">
                               {event.title}
                             </span>
                           </button>

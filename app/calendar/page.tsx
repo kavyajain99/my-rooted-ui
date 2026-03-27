@@ -75,8 +75,8 @@ export default function CalendarPage() {
 
             <div className="lg:col-span-8">
               <div className="bg-white/40 backdrop-blur-md rounded-3xl p-6 shadow-sm border border-white/20">
-                <CalendarGrid 
-                  month="february" 
+                <CalendarGrid
+                  month="april"
                   events={events}
                   onEventClick={(event) => setSelectedEvent(event)} 
                 />

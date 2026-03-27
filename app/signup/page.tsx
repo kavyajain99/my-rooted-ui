@@ -2,6 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { createBrowserClient } from '@supabase/ssr'
 import { AppWrapper } from "@/components/app-wrapper"
 import { Button } from "@/components/ui/button"
@@ -10,8 +11,8 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [message, setMessage] = useState("")
   const [error, setError] = useState("")
+  const router = useRouter()
 
   // Initialize the modern SSR-friendly client
   const supabase = createBrowserClient(
@@ -23,23 +24,15 @@ export default function SignUpPage() {
     e.preventDefault()
     setIsLoading(true)
     setError("")
-    setMessage("")
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        // This ensures the user is sent back to your site after confirming email
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    })
+    const { error } = await supabase.auth.signUp({ email, password })
 
     if (error) {
       setError(error.message)
+      setIsLoading(false)
     } else {
-      setMessage("Success! Check your email to confirm your account.")
+      router.push("/calendar")
     }
-    setIsLoading(false)
   }
 
   return (
@@ -76,7 +69,6 @@ export default function SignUpPage() {
             </div>
 
             {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
-            {message && <p className="text-xs text-green-600 font-medium">{message}</p>}
 
             <Button 
               type="submit" 
