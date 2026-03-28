@@ -199,7 +199,7 @@ export default function OnboardingPage() {
   }, [])
 
   const step1Complete = !!(gender && age)
-  const step2Complete = traits.length > 0 && intent.trim().length > 0
+  const step2Complete = traits.length > 0
 
   const toggleTrait = (label: string) =>
     setTraits(prev => prev.includes(label) ? prev.filter(t => t !== label) : [...prev, label])
@@ -219,7 +219,12 @@ export default function OnboardingPage() {
     router.push("/calendar")
   }
 
-  const handleFinish = () => save({ gender, age, neighborhood, traits, intent })
+  const handleFinish = () => {
+    const autoIntent = traits.length > 0
+      ? `I'm drawn to ${traits.join(", ").toLowerCase()} experiences and want to find community in Houston.`
+      : "Open to discovery"
+    save({ gender, age, neighborhood, traits, intent: autoIntent })
+  }
 
   const handleSkip = () =>
     save({ gender: "", age: "", neighborhood: "", traits: ["Curious"], intent: "Open to discovery" })
@@ -330,18 +335,6 @@ export default function OnboardingPage() {
                         />
                       ))}
                     </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50">Tell me more about yourself</label>
-                    <textarea
-                      value={intent}
-                      onChange={e => setIntent(e.target.value)}
-                      placeholder="e.g. I want to meet curious people outside of work and feel more grounded in the city…"
-                      rows={4}
-                      className="w-full rounded-2xl bg-white/60 border border-white/40 px-5 py-4 text-sm text-[#2F3E46] placeholder:text-[#2F3E46]/30 focus:outline-none focus:ring-2 resize-none transition-all"
-                      style={{ "--tw-ring-color": `${SAGE}30` } as React.CSSProperties}
-                    />
                   </div>
 
                   <div className="flex gap-3">
