@@ -14,16 +14,18 @@ interface RootedProfile {
 
 interface MoodInputProps {
   onResultsFound: (events: any[]) => void
+  onSearchStart?: () => void
   profile?: RootedProfile | null
 }
 
-export function MoodInput({ onResultsFound, profile }: MoodInputProps) {
+export function MoodInput({ onResultsFound, onSearchStart, profile }: MoodInputProps) {
   const [mood, setMood] = useState(profile?.intent || "")
   const [isListening, setIsListening] = useState(false)
 
   const handleDiscover = async () => {
     if (!mood.trim()) return
     setIsListening(true)
+    onSearchStart?.()
 
     try {
       const response = await fetch('/api/search', {
@@ -41,13 +43,10 @@ export function MoodInput({ onResultsFound, profile }: MoodInputProps) {
       })
 
       const data = await response.json()
-      if (data.events) {
-        onResultsFound(data.events)
-      } else {
-        console.error("Search error:", data.error)
-      }
+      onResultsFound(data.events || [])
     } catch (error) {
       console.error("Connection failed:", error)
+      onResultsFound([])
     } finally {
       setIsListening(false)
     }

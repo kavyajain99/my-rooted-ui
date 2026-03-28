@@ -3,18 +3,18 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface CalendarGridProps {
-  month: "april"
+  year: number
+  month: number          // 0 = January … 11 = December
   onEventClick: (event: any) => void
   events: any[]
 }
 
-const DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+const DAYS_OF_WEEK  = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+const MONTH_NAMES   = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December",
+]
 
-const MONTH_CONFIG = {
-  april: { year: 2026, daysInMonth: 30, startDay: 3, monthIdx: 3 },
-}
-
-// Maps social_energy string → one of four vibe keys
 function getVibeFromEnergy(energyData: any): string {
   const label = typeof energyData === "string" ? energyData : (energyData?.label || "")
   const e = label.toLowerCase()
@@ -24,7 +24,6 @@ function getVibeFromEnergy(energyData: any): string {
   return "parallel"
 }
 
-// Solid accent colours used for event chips
 const VIBE_CHIP: Record<string, { bg: string; text: string }> = {
   introspective: { bg: "rgba(122,139,124,0.15)", text: "#4a5e4c" },
   parallel:      { bg: "rgba(212,163,115,0.18)", text: "#7a5a2a" },
@@ -32,7 +31,6 @@ const VIBE_CHIP: Record<string, { bg: string; text: string }> = {
   kinetic:       { bg: "rgba(196,120,92,0.18)",  text: "#7a3a1e" },
 }
 
-// Left-border accent colours for cells with events
 const VIBE_CELL_BG: Record<string, string> = {
   introspective: "bg-[#7A8B7C]/8",
   parallel:      "bg-[#D4A373]/8",
@@ -49,12 +47,14 @@ const VIBE_LEGEND = [
 
 const MAX_VISIBLE = 2
 
-export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridProps) {
-  const config = MONTH_CONFIG[month]
-  const totalCells = Math.ceil((config.startDay + config.daysInMonth) / 7) * 7
+export function CalendarGrid({ year, month, onEventClick, events = [] }: CalendarGridProps) {
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  const startDay    = new Date(year, month, 1).getDay()
+  const totalCells  = Math.ceil((startDay + daysInMonth) / 7) * 7
+
   const cells = Array.from({ length: totalCells }, (_, i) => {
-    const day = i - config.startDay + 1
-    return day > 0 && day <= config.daysInMonth ? day : null
+    const day = i - startDay + 1
+    return day > 0 && day <= daysInMonth ? day : null
   })
 
   return (
@@ -62,7 +62,7 @@ export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridP
       {/* Header */}
       <div className="flex justify-between items-end px-1">
         <h2 className="font-display text-5xl capitalize text-[#2F3E46] tracking-tighter">
-          {month} <span className="opacity-30">2026</span>
+          {MONTH_NAMES[month]} <span className="opacity-30">{year}</span>
         </h2>
         <span className="text-[10px] uppercase font-bold text-[#2F3E46]/30 tracking-[0.2em] pb-2">
           Houston, TX
@@ -84,7 +84,7 @@ export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridP
 
         {/* Day-of-week header */}
         <div className="grid grid-cols-7 border-b border-black/5 bg-white/20">
-          {DAYS_OF_WEEK.map((d) => (
+          {DAYS_OF_WEEK.map(d => (
             <div key={d} className="py-4 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#2F3E46]/40">
               {d}
             </div>
@@ -95,17 +95,17 @@ export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridP
         <div className="grid grid-cols-7">
           {cells.map((day, idx) => {
             const dayEvents = day
-              ? events.filter((e) => {
+              ? events.filter(e => {
                   const src = e.event_date || e.raw_json?.event_date || e.raw_json?.date
                   if (!src) return false
                   const d = new Date(src)
-                  return d.getUTCDate() === day && d.getUTCMonth() === config.monthIdx
+                  return d.getUTCDate() === day && d.getUTCMonth() === month && d.getUTCFullYear() === year
                 })
               : []
 
-            const visible = dayEvents.slice(0, MAX_VISIBLE)
+            const visible  = dayEvents.slice(0, MAX_VISIBLE)
             const overflow = dayEvents.length - MAX_VISIBLE
-            const vibe = visible.length > 0
+            const vibe     = visible.length > 0
               ? getVibeFromEnergy(visible[0].social_energy || visible[0].raw_json?.social_energy)
               : null
 
@@ -124,7 +124,6 @@ export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridP
               >
                 {day && (
                   <div className="flex flex-col h-full gap-2">
-                    {/* Day number + optional dot */}
                     <div className="flex flex-col items-start gap-1 leading-none">
                       <span
                         className="font-display text-sm font-bold leading-none transition-opacity duration-200"
@@ -140,13 +139,12 @@ export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridP
                       )}
                     </div>
 
-                    {/* Event chips — max 2 */}
                     <div className="flex flex-col gap-1.5 flex-1">
-                      {visible.map((event) => {
-                        const v = getVibeFromEnergy(event.social_energy || event.raw_json?.social_energy)
+                      {visible.map(event => {
+                        const v    = getVibeFromEnergy(event.social_energy || event.raw_json?.social_energy)
                         const chip = VIBE_CHIP[v]
                         const data = event.raw_json || event
-                        const tooltip = data.vibe_check || data.description || null
+                        const tip  = data.vibe_check || data.description || null
                         return (
                           <Tooltip key={event.id}>
                             <TooltipTrigger asChild>
@@ -163,20 +161,19 @@ export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridP
                                 </span>
                               </button>
                             </TooltipTrigger>
-                            {tooltip && (
+                            {tip && (
                               <TooltipContent
                                 side="top"
                                 className="max-w-[220px] rounded-xl px-3 py-2.5 text-[11px] leading-snug bg-[#2F3E46] text-[#F4F1EA] border-0 shadow-xl"
                               >
                                 <p className="text-[9px] font-bold uppercase tracking-widest opacity-50 mb-1">Why this for you</p>
-                                {tooltip}
+                                {tip}
                               </TooltipContent>
                             )}
                           </Tooltip>
                         )
                       })}
 
-                      {/* Overflow indicator — Norman's constraint: surface count without cluttering */}
                       {overflow > 0 && (
                         <button
                           onClick={() => onEventClick(dayEvents[MAX_VISIBLE])}

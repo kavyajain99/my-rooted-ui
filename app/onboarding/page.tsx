@@ -204,9 +204,17 @@ export default function OnboardingPage() {
   const toggleTrait = (label: string) =>
     setTraits(prev => prev.includes(label) ? prev.filter(t => t !== label) : [...prev, label])
 
-  const save = async (profile: object) => {
+  const save = async (profile: Record<string, any>) => {
     sessionStorage.setItem("rootedProfile", JSON.stringify(profile))
-    // Mark onboarding as done in Supabase so login can smart-redirect next time
+
+    // Persist to Supabase so profile survives tab close / new device
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      await supabase.from("profiles").upsert(
+        { id: user.id, ...profile, updated_at: new Date().toISOString() },
+        { onConflict: "id" }
+      )
+    }
     await supabase.auth.updateUser({ data: { onboarding_complete: true } })
     router.push("/calendar")
   }
