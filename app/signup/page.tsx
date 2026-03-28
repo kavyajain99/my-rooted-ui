@@ -5,16 +5,19 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { createBrowserClient } from '@supabase/ssr'
 import { AppWrapper } from "@/components/app-wrapper"
+import { TopographicBackground } from "@/components/topographic-background"
 import { Button } from "@/components/ui/button"
 
+const SAGE = "#2C6B5F"
+
 export default function SignUpPage() {
-  const [email, setEmail] = useState("")
+  const [name, setName]         = useState("")
+  const [email, setEmail]       = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [error, setError]       = useState("")
   const router = useRouter()
 
-  // Initialize the modern SSR-friendly client
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -25,62 +28,101 @@ export default function SignUpPage() {
     setIsLoading(true)
     setError("")
 
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name.trim(),
+          onboarding_complete: false,
+        },
+      },
+    })
 
     if (error) {
       setError(error.message)
       setIsLoading(false)
-    } else {
-      router.push("/calendar")
+      return
     }
+
+    // Persist name so onboarding & calendar can read it immediately
+    if (name.trim()) {
+      sessionStorage.setItem("rootedName", name.trim())
+    }
+
+    router.push("/onboarding")
   }
+
+  const inputClass = "w-full rounded-2xl border border-white/40 bg-white/60 backdrop-blur-sm px-5 py-3.5 text-sm text-[#2F3E46] placeholder:text-[#2F3E46]/30 focus:outline-none focus:ring-2 focus:ring-[#2C6B5F]/25 transition-all"
+  const labelClass = "text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50"
 
   return (
     <AppWrapper>
-      <main className="flex min-h-screen flex-col items-center justify-center px-6 py-12">
-        <div className="w-full max-w-md">
+      <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-12">
+        <TopographicBackground />
+
+        <div className="relative z-10 w-full max-w-md">
           <div className="mb-10 text-center">
-            <h1 className="font-display text-4xl tracking-tight text-[#2F3E46] md:text-5xl">Rooted</h1>
-            <p className="mt-3 font-sans text-base text-muted-foreground">Create your account to start your journey.</p>
+            <h1 className="font-display text-4xl tracking-tight text-[#2F3E46]">Rooted</h1>
+            <p className="mt-2 text-sm text-[#2F3E46]/60 font-medium">Create your account to start your journey.</p>
           </div>
 
-          <form onSubmit={handleSignUp} className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Email</label>
-              <input
-                type="email"
-                placeholder="name@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border border-border bg-card px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Password</label>
-              <input
-                type="password"
-                placeholder="Create a strong password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-border bg-card px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                required
-              />
-            </div>
+          <div className="bg-[#F4F1EA]/80 backdrop-blur-md rounded-[2.5rem] p-10 shadow-xl border border-white/40">
+            <form onSubmit={handleSignUp} className="space-y-5">
+              <div className="space-y-2">
+                <label className={labelClass}>Your Name</label>
+                <input
+                  type="text"
+                  placeholder="First name or nickname"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  className={inputClass}
+                  required
+                />
+              </div>
 
-            {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
+              <div className="space-y-2">
+                <label className={labelClass}>Email</label>
+                <input
+                  type="email"
+                  placeholder="name@example.com"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className={inputClass}
+                  required
+                />
+              </div>
 
-            <Button 
-              type="submit" 
-              disabled={isLoading} 
-              className="w-full bg-[#2F3E46] py-6 text-white uppercase tracking-widest"
-            >
-              {isLoading ? "Creating Account..." : "Join the Vault"}
-            </Button>
-          </form>
+              <div className="space-y-2">
+                <label className={labelClass}>Password</label>
+                <input
+                  type="password"
+                  placeholder="Create a strong password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className={inputClass}
+                  required
+                />
+              </div>
 
-          <p className="mt-8 text-center text-sm text-muted-foreground">
-            Already have an account? <Link href="/login" className="text-[#2F3E46] font-bold underline">Login here</Link>
+              {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
+
+              <button
+                type="submit"
+                disabled={isLoading || !name.trim()}
+                className="mt-2 flex w-full items-center justify-center rounded-2xl py-5 font-sans text-xs font-bold uppercase tracking-[0.2em] text-white shadow-lg transition-all disabled:opacity-30"
+                style={{ backgroundColor: SAGE }}
+              >
+                {isLoading ? "Creating account…" : "Join the Vault"}
+              </button>
+            </form>
+          </div>
+
+          <p className="mt-6 text-center text-sm text-[#2F3E46]/50">
+            Already have an account?{" "}
+            <Link href="/login" className="font-bold text-[#2F3E46] underline">
+              Login here
+            </Link>
           </p>
         </div>
       </main>

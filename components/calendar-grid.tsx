@@ -1,5 +1,7 @@
 "use client"
 
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+
 interface CalendarGridProps {
   month: "april"
   onEventClick: (event: any) => void
@@ -12,122 +14,185 @@ const MONTH_CONFIG = {
   april: { year: 2026, daysInMonth: 30, startDay: 3, monthIdx: 3 },
 }
 
+// Maps social_energy string → one of four vibe keys
 function getVibeFromEnergy(energyData: any): string {
-  const label = typeof energyData === 'string' 
-    ? energyData 
-    : (energyData?.label || "");
-    
-  const e = label.toLowerCase();
-  if (e.includes('kinetic')) return "kinetic";
-  if (e.includes('introspective')) return "introspective";
-  if (e.includes('cocreative')) return "cocreative";
-  return "parallel";
+  const label = typeof energyData === "string" ? energyData : (energyData?.label || "")
+  const e = label.toLowerCase()
+  if (e.includes("kinetic") || e.includes("athletic") || e.includes("festive")) return "kinetic"
+  if (e.includes("introspective") || e.includes("spiritual") || e.includes("mindful") || e.includes("chill")) return "introspective"
+  if (e.includes("cocreative") || e.includes("creative") || e.includes("culinary")) return "cocreative"
+  return "parallel"
 }
 
-function getVibeColor(vibe: string): string {
-  switch (vibe) {
-    case "introspective": return "bg-[#7A8B7C]";
-    case "parallel": return "bg-[#D4A373]";
-    case "cocreative": return "bg-[#B38B6D]";
-    case "kinetic": return "bg-[#C4785C]";
-    default: return "bg-primary";
-  }
+// Solid accent colours used for event chips
+const VIBE_CHIP: Record<string, { bg: string; text: string }> = {
+  introspective: { bg: "rgba(122,139,124,0.15)", text: "#4a5e4c" },
+  parallel:      { bg: "rgba(212,163,115,0.18)", text: "#7a5a2a" },
+  cocreative:    { bg: "rgba(179,139,109,0.18)", text: "#6b4a2a" },
+  kinetic:       { bg: "rgba(196,120,92,0.18)",  text: "#7a3a1e" },
 }
 
-function getVibeBgColor(vibe: string): string {
-  switch (vibe) {
-    case "introspective": return "bg-[#7A8B7C]/10";
-    case "parallel": return "bg-[#D4A373]/10";
-    case "cocreative": return "bg-[#B38B6D]/10";
-    case "kinetic": return "bg-[#C4785C]/10";
-    default: return "bg-card";
-  }
+// Left-border accent colours for cells with events
+const VIBE_CELL_BG: Record<string, string> = {
+  introspective: "bg-[#7A8B7C]/8",
+  parallel:      "bg-[#D4A373]/8",
+  cocreative:    "bg-[#B38B6D]/8",
+  kinetic:       "bg-[#C4785C]/8",
 }
+
+const VIBE_LEGEND = [
+  { key: "introspective", label: "Introspective",  dot: "#7A8B7C" },
+  { key: "cocreative",    label: "Co-creative",    dot: "#B38B6D" },
+  { key: "kinetic",       label: "Kinetic",        dot: "#C4785C" },
+  { key: "parallel",      label: "Social / Mixed", dot: "#D4A373" },
+]
+
+const MAX_VISIBLE = 2
 
 export function CalendarGrid({ month, onEventClick, events = [] }: CalendarGridProps) {
-  const config = MONTH_CONFIG[month];
-  const totalCells = Math.ceil((config.startDay + config.daysInMonth) / 7) * 7;
-  const cells = Array.from({ length: totalCells }, (_, index) => {
-    const dayNumber = index - config.startDay + 1;
-    return dayNumber > 0 && dayNumber <= config.daysInMonth ? dayNumber : null;
-  });
+  const config = MONTH_CONFIG[month]
+  const totalCells = Math.ceil((config.startDay + config.daysInMonth) / 7) * 7
+  const cells = Array.from({ length: totalCells }, (_, i) => {
+    const day = i - config.startDay + 1
+    return day > 0 && day <= config.daysInMonth ? day : null
+  })
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex justify-between items-end px-2">
+      {/* Header */}
+      <div className="flex justify-between items-end px-1">
         <h2 className="font-display text-5xl capitalize text-[#2F3E46] tracking-tighter">
           {month} <span className="opacity-30">2026</span>
         </h2>
-        <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-[0.2em] pb-2">
+        <span className="text-[10px] uppercase font-bold text-[#2F3E46]/30 tracking-[0.2em] pb-2">
           Houston, TX
         </span>
       </div>
 
-      <div className="overflow-hidden rounded-[2.5rem] border border-white/20 bg-white/40 backdrop-blur-md shadow-sm">
-        <div className="grid grid-cols-7 border-b border-border bg-muted/30">
-          {DAYS_OF_WEEK.map((day) => (
-            <div key={day} className="px-2 py-4 text-center text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {day}
+      {/* Legend */}
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 px-1">
+        {VIBE_LEGEND.map(({ key, label, dot }) => (
+          <div key={key} className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
+            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40">{label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Grid */}
+      <div className="overflow-hidden rounded-[2rem] border border-white/30 bg-white/30 backdrop-blur-sm shadow-sm">
+
+        {/* Day-of-week header */}
+        <div className="grid grid-cols-7 border-b border-black/5 bg-white/20">
+          {DAYS_OF_WEEK.map((d) => (
+            <div key={d} className="py-4 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#2F3E46]/40">
+              {d}
             </div>
           ))}
         </div>
 
+        {/* Day cells */}
         <div className="grid grid-cols-7">
-          {cells.map((day, index) => {
-            const dayEvents = events.filter(e => {
-              if (!day) return false;
-              
-              // Try to find the date in multiple possible locations
-              const dateSource = e.event_date || e.raw_json?.event_date || e.raw_json?.date;
-              if (!dateSource) return false;
+          {cells.map((day, idx) => {
+            const dayEvents = day
+              ? events.filter((e) => {
+                  const src = e.event_date || e.raw_json?.event_date || e.raw_json?.date
+                  if (!src) return false
+                  const d = new Date(src)
+                  return d.getUTCDate() === day && d.getUTCMonth() === config.monthIdx
+                })
+              : []
 
-              const dObj = new Date(dateSource);
-              
-              // Matching using UTC to prevent timezone shifts
-              return (
-                dObj.getUTCDate() === day && 
-                dObj.getUTCMonth() === config.monthIdx
-              );
-            });
+            const visible = dayEvents.slice(0, MAX_VISIBLE)
+            const overflow = dayEvents.length - MAX_VISIBLE
+            const vibe = visible.length > 0
+              ? getVibeFromEnergy(visible[0].social_energy || visible[0].raw_json?.social_energy)
+              : null
 
-            const dominantVibe = dayEvents.length > 0 
-              ? getVibeFromEnergy(dayEvents[0].social_energy || dayEvents[0].raw_json?.social_energy) 
-              : null;
-            
+            const isLastRow = idx >= totalCells - 7
+            const isLastCol = (idx + 1) % 7 === 0
+
             return (
               <div
-                key={index}
-                className={`min-h-[160px] border-b border-r border-border p-3 transition-all duration-300 ${
-                  day ? (dominantVibe ? getVibeBgColor(dominantVibe) : "bg-card/40") : "bg-muted/5"
-                }`}
+                key={idx}
+                className={[
+                  "min-h-[130px] p-3 transition-colors duration-200",
+                  !isLastRow ? "border-b border-black/5" : "",
+                  !isLastCol ? "border-r border-black/5" : "",
+                  day && vibe ? VIBE_CELL_BG[vibe] : day ? "bg-white/10" : "bg-black/[0.02]",
+                ].join(" ")}
               >
                 {day && (
-                  <>
-                    <span className="font-display text-xs font-bold opacity-20">{day}</span>
-                    <div className="mt-3 space-y-2">
-                      {dayEvents.map((event) => {
-                        const vibe = getVibeFromEnergy(event.social_energy || event.raw_json?.social_energy);
-                        return (
-                          <button
-                            key={event.id}
-                            onClick={() => onEventClick(event)}
-                            className="group flex w-full items-start gap-2 text-left"
-                          >
-                            <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${getVibeColor(vibe)} shadow-sm transition-transform group-hover:scale-125`} />
-                            <span className="text-[11px] leading-tight font-semibold line-clamp-3 text-[#2F3E46] group-hover:text-primary transition-colors uppercase tracking-tight">
-                              {event.title}
-                            </span>
-                          </button>
-                        );
-                      })}
+                  <div className="flex flex-col h-full gap-2">
+                    {/* Day number + optional dot */}
+                    <div className="flex flex-col items-start gap-1 leading-none">
+                      <span
+                        className="font-display text-sm font-bold leading-none transition-opacity duration-200"
+                        style={{ color: "#2F3E46", opacity: dayEvents.length > 0 ? 0.7 : 0.2 }}
+                      >
+                        {day}
+                      </span>
+                      {dayEvents.length > 0 && vibe && (
+                        <span
+                          className="block w-1 h-1 rounded-full"
+                          style={{ backgroundColor: VIBE_CHIP[vibe].text, opacity: 0.6 }}
+                        />
+                      )}
                     </div>
-                  </>
+
+                    {/* Event chips — max 2 */}
+                    <div className="flex flex-col gap-1.5 flex-1">
+                      {visible.map((event) => {
+                        const v = getVibeFromEnergy(event.social_energy || event.raw_json?.social_energy)
+                        const chip = VIBE_CHIP[v]
+                        const data = event.raw_json || event
+                        const tooltip = data.vibe_check || data.description || null
+                        return (
+                          <Tooltip key={event.id}>
+                            <TooltipTrigger asChild>
+                              <button
+                                onClick={() => onEventClick(event)}
+                                className="w-full text-left rounded-lg px-2.5 py-2 transition-all duration-150 hover:brightness-95 active:scale-[0.98] cursor-pointer"
+                                style={{ backgroundColor: chip.bg }}
+                              >
+                                <span
+                                  className="block text-[11px] font-bold leading-snug line-clamp-2"
+                                  style={{ color: chip.text }}
+                                >
+                                  {event.title}
+                                </span>
+                              </button>
+                            </TooltipTrigger>
+                            {tooltip && (
+                              <TooltipContent
+                                side="top"
+                                className="max-w-[220px] rounded-xl px-3 py-2.5 text-[11px] leading-snug bg-[#2F3E46] text-[#F4F1EA] border-0 shadow-xl"
+                              >
+                                <p className="text-[9px] font-bold uppercase tracking-widest opacity-50 mb-1">Why this for you</p>
+                                {tooltip}
+                              </TooltipContent>
+                            )}
+                          </Tooltip>
+                        )
+                      })}
+
+                      {/* Overflow indicator — Norman's constraint: surface count without cluttering */}
+                      {overflow > 0 && (
+                        <button
+                          onClick={() => onEventClick(dayEvents[MAX_VISIBLE])}
+                          className="w-full text-left px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#2F3E46]/40 hover:text-[#2F3E46]/70 transition-colors"
+                        >
+                          +{overflow} more
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 )}
               </div>
-            );
+            )
           })}
         </div>
       </div>
     </div>
-  );
+  )
 }
