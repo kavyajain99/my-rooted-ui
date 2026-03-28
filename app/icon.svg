@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Warm beige background with soft rounded corners -->
+  <rect width="32" height="32" rx="8" fill="#F4F1EA"/>
+
+  <!-- Outermost ring — faintest -->
+  <circle cx="16" cy="16" r="13.5" stroke="#2C6B5F" stroke-width="0.9" opacity="0.18"/>
+
+  <!-- Mid-outer ring -->
+  <circle cx="16" cy="16" r="10.5" stroke="#2C6B5F" stroke-width="1.1" opacity="0.30"/>
+
+  <!-- Mid ring -->
+  <circle cx="16" cy="16" r="7.5" stroke="#2C6B5F" stroke-width="1.3" opacity="0.48"/>
+
+  <!-- Inner ring -->
+  <circle cx="16" cy="16" r="4.5" stroke="#2C6B5F" stroke-width="1.5" opacity="0.70"/>
+
+  <!-- Center origin dot -->
+  <circle cx="16" cy="16" r="2.2" fill="#2C6B5F"/>
+</svg>
