@@ -246,21 +246,15 @@ export default function CalendarPage() {
           </button>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
-          <h1 className="font-display text-6xl mb-14 text-center text-[#2F3E46] tracking-wide">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
+          <h1 className="font-display text-4xl md:text-6xl mb-8 md:mb-14 text-center text-[#2F3E46] tracking-wide">
             {userName ? `${userName}'s Vault` : "The Vault"}
           </h1>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-12">
 
-            {/* Left sidebar */}
-            <div className="lg:col-span-3 space-y-6">
-              {profile && <UserSignalCard profile={profile} onIntentChange={handleIntentChange} />}
-              <MoodInput onResultsFound={handleResults} onSearchStart={handleSearchStart} profile={profile} />
-            </div>
-
-            {/* Calendar */}
-            <div className="lg:col-span-9">
+            {/* Calendar — first on mobile, right on desktop */}
+            <div className="lg:col-span-9 order-1 lg:order-2">
               <div className="bg-white/40 backdrop-blur-md rounded-3xl p-6 shadow-sm border border-white/20 space-y-4">
 
                 {/* Empty state */}
@@ -292,6 +286,13 @@ export default function CalendarPage() {
                 />
               </div>
             </div>
+
+            {/* Sidebar — below calendar on mobile, left on desktop */}
+            <div className="lg:col-span-3 order-2 lg:order-1 space-y-6">
+              {profile && <UserSignalCard profile={profile} onIntentChange={handleIntentChange} />}
+              <MoodInput onResultsFound={handleResults} onSearchStart={handleSearchStart} profile={profile} />
+            </div>
+
           </div>
         </div>
 

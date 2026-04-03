@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface CalendarGridProps {
@@ -10,6 +12,7 @@ interface CalendarGridProps {
 }
 
 const DAYS_OF_WEEK  = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+const DAYS_SHORT    = ["S", "M", "T", "W", "T", "F", "S"]
 const MONTH_NAMES   = [
   "January","February","March","April","May","June",
   "July","August","September","October","November","December",
@@ -31,6 +34,13 @@ const VIBE_CHIP: Record<string, { bg: string; text: string }> = {
   kinetic:       { bg: "rgba(196,120,92,0.18)",  text: "#7a3a1e" },
 }
 
+const VIBE_DOT: Record<string, string> = {
+  introspective: "#7A8B7C",
+  parallel:      "#D4A373",
+  cocreative:    "#B38B6D",
+  kinetic:       "#C4785C",
+}
+
 const VIBE_CELL_BG: Record<string, string> = {
   introspective: "bg-[#7A8B7C]/8",
   parallel:      "bg-[#D4A373]/8",
@@ -47,7 +57,18 @@ const VIBE_LEGEND = [
 
 const MAX_VISIBLE = 2
 
+function getEventsForDay(events: any[], day: number, month: number, year: number) {
+  return events.filter(e => {
+    const src = e.event_date || e.raw_json?.event_date || e.raw_json?.date
+    if (!src) return false
+    const d = new Date(src)
+    return d.getUTCDate() === day && d.getUTCMonth() === month && d.getUTCFullYear() === year
+  })
+}
+
 export function CalendarGrid({ year, month, onEventClick, events = [] }: CalendarGridProps) {
+  const [selectedDay, setSelectedDay] = useState<number | null>(null)
+
   const daysInMonth = new Date(year, month + 1, 0).getDate()
   const startDay    = new Date(year, month, 1).getDay()
   const totalCells  = Math.ceil((startDay + daysInMonth) / 7) * 7
@@ -57,20 +78,24 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
     return day > 0 && day <= daysInMonth ? day : null
   })
 
+  const selectedDayEvents = selectedDay
+    ? getEventsForDay(events, selectedDay, month, year)
+    : []
+
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 md:gap-6">
       {/* Header */}
       <div className="flex justify-between items-end px-1">
-        <h2 className="font-display text-5xl capitalize text-[#2F3E46] tracking-tighter">
+        <h2 className="font-display text-3xl md:text-5xl capitalize text-[#2F3E46] tracking-tighter">
           {MONTH_NAMES[month]} <span className="opacity-30">{year}</span>
         </h2>
-        <span className="text-[10px] uppercase font-bold text-[#2F3E46]/30 tracking-[0.2em] pb-2">
+        <span className="text-[10px] uppercase font-bold text-[#2F3E46]/30 tracking-[0.2em] pb-1 md:pb-2">
           Houston, TX
         </span>
       </div>
 
-      {/* Legend */}
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 px-1">
+      {/* Legend — desktop only */}
+      <div className="hidden md:flex flex-wrap items-center gap-x-5 gap-y-2 px-1">
         {VIBE_LEGEND.map(({ key, label, dot }) => (
           <div key={key} className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
@@ -80,13 +105,14 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
       </div>
 
       {/* Grid */}
-      <div className="overflow-hidden rounded-[2rem] border border-white/30 bg-white/30 backdrop-blur-sm shadow-sm">
+      <div className="overflow-hidden rounded-2xl md:rounded-[2rem] border border-white/30 bg-white/30 backdrop-blur-sm shadow-sm">
 
         {/* Day-of-week header */}
         <div className="grid grid-cols-7 border-b border-black/5 bg-white/20">
-          {DAYS_OF_WEEK.map(d => (
-            <div key={d} className="py-4 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#2F3E46]/40">
-              {d}
+          {DAYS_OF_WEEK.map((d, i) => (
+            <div key={d} className="py-2.5 md:py-4 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#2F3E46]/40">
+              <span className="md:hidden">{DAYS_SHORT[i]}</span>
+              <span className="hidden md:inline">{d}</span>
             </div>
           ))}
         </div>
@@ -94,52 +120,75 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
         {/* Day cells */}
         <div className="grid grid-cols-7">
           {cells.map((day, idx) => {
-            const dayEvents = day
-              ? events.filter(e => {
-                  const src = e.event_date || e.raw_json?.event_date || e.raw_json?.date
-                  if (!src) return false
-                  const d = new Date(src)
-                  return d.getUTCDate() === day && d.getUTCMonth() === month && d.getUTCFullYear() === year
-                })
-              : []
-
+            const dayEvents = day ? getEventsForDay(events, day, month, year) : []
             const visible  = dayEvents.slice(0, MAX_VISIBLE)
             const overflow = dayEvents.length - MAX_VISIBLE
             const vibe     = visible.length > 0
               ? getVibeFromEnergy(visible[0].social_energy || visible[0].raw_json?.social_energy)
               : null
 
-            const isLastRow = idx >= totalCells - 7
-            const isLastCol = (idx + 1) % 7 === 0
+            const isLastRow   = idx >= totalCells - 7
+            const isLastCol   = (idx + 1) % 7 === 0
+            const isSelected  = selectedDay === day
 
             return (
               <div
                 key={idx}
                 className={[
-                  "min-h-[130px] p-3 transition-colors duration-200",
+                  // Mobile: compact tap targets; Desktop: full cells
+                  "min-h-[44px] md:min-h-[130px] p-1.5 md:p-3 transition-colors duration-200",
                   !isLastRow ? "border-b border-black/5" : "",
                   !isLastCol ? "border-r border-black/5" : "",
                   day && vibe ? VIBE_CELL_BG[vibe] : day ? "bg-white/10" : "bg-black/[0.02]",
+                  day ? "cursor-pointer md:cursor-default" : "",
                 ].join(" ")}
+                onClick={() => {
+                  if (!day) return
+                  setSelectedDay(isSelected ? null : day)
+                }}
               >
                 {day && (
-                  <div className="flex flex-col h-full gap-2">
-                    <div className="flex flex-col items-start gap-1 leading-none">
+                  <div className="flex flex-col h-full">
+
+                    {/* Day number */}
+                    <div className="flex flex-col items-center md:items-start gap-0.5 md:gap-1 leading-none">
+                      {/* Mobile: circle highlight when selected */}
                       <span
-                        className="font-display text-sm font-bold leading-none transition-opacity duration-200"
-                        style={{ color: "#2F3E46", opacity: dayEvents.length > 0 ? 0.7 : 0.2 }}
+                        className={[
+                          "font-display text-xs md:text-sm font-bold leading-none transition-all duration-150",
+                          // Mobile: circle around selected day
+                          "md:bg-transparent md:w-auto md:h-auto md:rounded-none md:p-0",
+                          isSelected
+                            ? "w-6 h-6 rounded-full flex items-center justify-center text-white text-[11px]"
+                            : "w-6 h-6 flex items-center justify-center text-[11px] md:w-auto md:h-auto",
+                        ].join(" ")}
+                        style={{
+                          color: isSelected ? "#F4F1EA" : "#2F3E46",
+                          opacity: isSelected ? 1 : dayEvents.length > 0 ? 0.8 : 0.25,
+                          backgroundColor: isSelected ? "#2C6B5F" : "transparent",
+                        }}
                       >
                         {day}
                       </span>
+
+                      {/* Dot indicator on desktop */}
                       {dayEvents.length > 0 && vibe && (
-                        <span
-                          className="block w-1 h-1 rounded-full"
-                          style={{ backgroundColor: VIBE_CHIP[vibe].text, opacity: 0.6 }}
-                        />
+                        <span className="hidden md:block w-1 h-1 rounded-full" style={{ backgroundColor: VIBE_DOT[vibe], opacity: 0.6 }} />
                       )}
                     </div>
 
-                    <div className="flex flex-col gap-1.5 flex-1">
+                    {/* Mobile: event dots */}
+                    {dayEvents.length > 0 && (
+                      <div className="md:hidden flex justify-center gap-0.5 mt-1">
+                        {dayEvents.slice(0, 3).map((e, i) => {
+                          const v = getVibeFromEnergy(e.social_energy || e.raw_json?.social_energy)
+                          return <span key={i} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: VIBE_DOT[v] }} />
+                        })}
+                      </div>
+                    )}
+
+                    {/* Desktop: event chips */}
+                    <div className="hidden md:flex flex-col gap-1.5 flex-1 mt-2">
                       {visible.map(event => {
                         const v    = getVibeFromEnergy(event.social_energy || event.raw_json?.social_energy)
                         const chip = VIBE_CHIP[v]
@@ -149,23 +198,17 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
                           <Tooltip key={event.id}>
                             <TooltipTrigger asChild>
                               <button
-                                onClick={() => onEventClick(event)}
-                                className="w-full text-left rounded-lg px-2.5 py-2 transition-all duration-150 hover:brightness-95 active:scale-[0.98] cursor-pointer"
+                                onClick={e => { e.stopPropagation(); onEventClick(event) }}
+                                className="w-full text-left rounded-lg px-2.5 py-2 transition-all duration-150 hover:brightness-95 active:scale-[0.98]"
                                 style={{ backgroundColor: chip.bg }}
                               >
-                                <span
-                                  className="block text-[11px] font-bold leading-snug line-clamp-2"
-                                  style={{ color: chip.text }}
-                                >
+                                <span className="block text-[11px] font-bold leading-snug line-clamp-2" style={{ color: chip.text }}>
                                   {event.title}
                                 </span>
                               </button>
                             </TooltipTrigger>
                             {tip && (
-                              <TooltipContent
-                                side="top"
-                                className="max-w-[220px] rounded-xl px-3 py-2.5 text-[11px] leading-snug bg-[#2F3E46] text-[#F4F1EA] border-0 shadow-xl"
-                              >
+                              <TooltipContent side="top" className="max-w-[220px] rounded-xl px-3 py-2.5 text-[11px] leading-snug bg-[#2F3E46] text-[#F4F1EA] border-0 shadow-xl">
                                 <p className="text-[9px] font-bold uppercase tracking-widest opacity-50 mb-1">Why this for you</p>
                                 {tip}
                               </TooltipContent>
@@ -173,22 +216,85 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
                           </Tooltip>
                         )
                       })}
-
                       {overflow > 0 && (
                         <button
-                          onClick={() => onEventClick(dayEvents[MAX_VISIBLE])}
+                          onClick={e => { e.stopPropagation(); onEventClick(dayEvents[MAX_VISIBLE]) }}
                           className="w-full text-left px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#2F3E46]/40 hover:text-[#2F3E46]/70 transition-colors"
                         >
                           +{overflow} more
                         </button>
                       )}
                     </div>
+
                   </div>
                 )}
               </div>
             )
           })}
         </div>
+      </div>
+
+      {/* Mobile: day detail panel */}
+      <AnimatePresence>
+        {selectedDay !== null && (
+          <motion.div
+            key={selectedDay}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className="md:hidden rounded-2xl bg-white/50 border border-white/30 backdrop-blur-md overflow-hidden"
+          >
+            <div className="px-4 py-3 border-b border-black/5 flex items-center justify-between">
+              <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#2F3E46]/50">
+                {MONTH_NAMES[month]} {selectedDay}
+              </p>
+              <button onClick={() => setSelectedDay(null)} className="text-[10px] text-[#2F3E46]/30 hover:text-[#2F3E46]/60 transition-colors font-bold uppercase tracking-widest">
+                Close
+              </button>
+            </div>
+
+            {selectedDayEvents.length === 0 ? (
+              <p className="px-4 py-5 text-sm text-[#2F3E46]/40 text-center">No events this day.</p>
+            ) : (
+              <div className="divide-y divide-black/5">
+                {selectedDayEvents.map(event => {
+                  const v    = getVibeFromEnergy(event.social_energy || event.raw_json?.social_energy)
+                  const chip = VIBE_CHIP[v]
+                  const data = event.raw_json || event
+                  const time = data.time || data.event_time || null
+                  return (
+                    <button
+                      key={event.id}
+                      onClick={() => onEventClick(event)}
+                      className="w-full text-left px-4 py-3.5 flex items-start gap-3 hover:bg-white/40 transition-colors active:scale-[0.99]"
+                    >
+                      <span className="mt-1 w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: VIBE_DOT[v] }} />
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold text-[#2F3E46] leading-snug">{event.title}</p>
+                        {time && <p className="text-[11px] text-[#2F3E46]/40 mt-0.5 font-medium">{time}</p>}
+                        {data.vibe_check && <p className="text-[11px] italic text-[#2F3E46]/40 mt-0.5 leading-snug line-clamp-2">{data.vibe_check}</p>}
+                      </div>
+                      <span className="ml-auto text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-full flex-shrink-0 self-center" style={{ backgroundColor: chip.bg, color: chip.text }}>
+                        {v}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile: legend at bottom */}
+      <div className="md:hidden flex flex-wrap items-center gap-x-4 gap-y-1.5 px-1">
+        {VIBE_LEGEND.map(({ key, label, dot }) => (
+          <div key={key} className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
+            <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40">{label}</span>
+          </div>
+        ))}
       </div>
     </div>
   )

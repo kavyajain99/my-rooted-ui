@@ -1,14 +1,10 @@
 import React from "react"
 import type { Metadata } from 'next'
-import { Inter, Libre_Baskerville, Instrument_Serif } from 'next/font/google'
+import { Inter, Instrument_Serif } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 const _inter = Inter({ subsets: ["latin"] });
-const _libreBaskerville = Libre_Baskerville({ 
-  subsets: ["latin"],
-  weight: ["400", "700"]
-});
 const _instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   weight: ["400"]
