@@ -257,7 +257,7 @@ export default function OnboardingPage() {
                   className="space-y-8"
                 >
                   <div className="space-y-1">
-                    <h2 className="font-display text-3xl text-[#2F3E46] leading-tight">Tell us about yourself.</h2>
+                    <h2 className="font-display text-2xl md:text-3xl text-[#2F3E46] leading-tight">Tell us about yourself.</h2>
                     <p className="text-sm text-[#2F3E46]/60 font-medium">This helps us surface events that actually fit your life.</p>
                   </div>
 
@@ -319,7 +319,7 @@ export default function OnboardingPage() {
                   className="space-y-8"
                 >
                   <div className="space-y-1">
-                    <h2 className="font-display text-3xl text-[#2F3E46] leading-tight">What's your vibe?</h2>
+                    <h2 className="font-display text-2xl md:text-3xl text-[#2F3E46] leading-tight">What's your vibe?</h2>
                     <p className="text-sm text-[#2F3E46]/60 font-medium">Select all that speak to you — the more you share, the better we match.</p>
                   </div>
 

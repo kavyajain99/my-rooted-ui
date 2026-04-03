@@ -33,7 +33,7 @@ export default function AboutPage() {
           </header>
 
           {/* The Narrative */}
-          <div className="space-y-8 font-sans text-lg leading-relaxed text-[#2F3E46]/90">
+          <div className="space-y-8 font-sans text-base md:text-lg leading-relaxed text-[#2F3E46]/90">
             <section className="space-y-6">
               <p>
                 I’ve grown to dislike being asked where I’m from – because I don’t have 
@@ -53,7 +53,7 @@ export default function AboutPage() {
             </section>
 
             <section className="bg-white/30 backdrop-blur-sm p-8 rounded-2xl border border-white/20 my-12">
-              <h2 className="font-display text-2xl mb-4 italic">The Project</h2>
+              <h2 className="font-display text-xl md:text-2xl mb-4 italic">The Project</h2>
               <p>
                 I’ve tried, I’ve failed, I’ve made friends, I’ve lost them, 
                 I’ve moved across the country and done it again... and again. 
@@ -73,7 +73,7 @@ export default function AboutPage() {
                 yes, but are they human? Do they fill our need to belong?
 
               </p>
-              <p className="font-display text-2xl text-center py-8">
+              <p className="font-display text-xl md:text-2xl text-center py-8">
                 "What if this very same tech stack—with a different intention—could help us 
                 return to connecting in person?"
               </p>
