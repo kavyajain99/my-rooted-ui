@@ -63,6 +63,9 @@ export function ProfilePanel({ open, onClose, profile, onVibesChange }: ProfileP
     localStorage.setItem("rootedRadius", String(val))
   }
 
+  // Compute slider fill percentage for the track gradient
+  const sliderPct = ((radius - 1) / (25 - 1)) * 100
+
   return (
     <AnimatePresence>
       {open && (
@@ -79,12 +82,17 @@ export function ProfilePanel({ open, onClose, profile, onVibesChange }: ProfileP
           <motion.div
             initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed right-0 top-0 h-full w-80 max-w-[90vw] z-50 bg-[#F4F1EA]/95 backdrop-blur-xl shadow-2xl border-l border-white/30 overflow-y-auto"
+            className="fixed right-0 top-0 h-full w-80 max-w-[90vw] z-50 bg-[#F4F1EA]/97 dark:bg-[#1E2B31]/97 backdrop-blur-xl shadow-2xl border-l border-black/8 dark:border-white/10 overflow-y-auto"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-black/5">
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50">Profile Settings</p>
-              <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-black/5 transition-colors text-[#2F3E46]/40 hover:text-[#2F3E46]">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-black/6 dark:border-white/8">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50 dark:text-[#E8E3D8]/50">
+                Profile Settings
+              </p>
+              <button
+                onClick={onClose}
+                className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/8 transition-colors text-[#2F3E46]/40 dark:text-[#E8E3D8]/40 hover:text-[#2F3E46] dark:hover:text-[#E8E3D8]"
+              >
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -93,18 +101,21 @@ export function ProfilePanel({ open, onClose, profile, onVibesChange }: ProfileP
 
               {/* Dark mode toggle */}
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 mb-3">Appearance</p>
-                <div className="flex items-center justify-between bg-white/40 rounded-xl px-4 py-3 border border-white/20">
-                  <span className="text-sm font-medium text-[#2F3E46]">Dark Mode</span>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#E8E3D8]/40 mb-3">
+                  Appearance
+                </p>
+                <div className="flex items-center justify-between bg-white/50 dark:bg-white/6 rounded-xl px-4 py-3 border border-black/8 dark:border-white/10">
+                  <span className="text-sm font-medium text-[#2F3E46] dark:text-[#E8E3D8]">Dark Mode</span>
                   <button
                     onClick={toggleDark}
-                    className="relative w-10 h-5 rounded-full transition-colors duration-300 flex-shrink-0"
-                    style={{ backgroundColor: darkMode ? SAGE : "rgba(47,62,70,0.15)" }}
+                    aria-label="Toggle dark mode"
+                    className="relative w-11 h-6 rounded-full transition-colors duration-300 flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2C6B5F]"
+                    style={{ backgroundColor: darkMode ? SAGE : "rgba(47,62,70,0.18)" }}
                   >
                     <motion.div
-                      animate={{ x: darkMode ? 20 : 2 }}
+                      animate={{ x: darkMode ? 22 : 3 }}
                       transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                      className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm"
+                      className="absolute top-1 w-4 h-4 rounded-full bg-white shadow-md"
                     />
                   </button>
                 </div>
@@ -112,25 +123,31 @@ export function ProfilePanel({ open, onClose, profile, onVibesChange }: ProfileP
 
               {/* Radius slider */}
               <div>
-                <div className="flex items-center justify-between mb-3">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40">Travel Radius</p>
-                  <span className="text-xs font-bold text-[#2F3E46]/60">{radius} mi</span>
+                <div className="flex items-center justify-between mb-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#E8E3D8]/40">
+                    Travel Radius
+                  </p>
+                  <span className="text-sm font-bold text-[#2C6B5F]">{radius} mi</span>
                 </div>
                 <input
                   type="range" min={1} max={25} value={radius}
                   onChange={e => handleRadius(Number(e.target.value))}
-                  className="w-full h-1 rounded-full appearance-none cursor-pointer"
-                  style={{ accentColor: SAGE }}
+                  className="w-full"
+                  style={{
+                    background: `linear-gradient(to right, ${SAGE} ${sliderPct}%, rgba(47,62,70,0.14) ${sliderPct}%)`,
+                  }}
                 />
-                <div className="flex justify-between mt-1.5">
-                  <span className="text-[9px] text-[#2F3E46]/30 font-bold uppercase tracking-wide">1 mi</span>
-                  <span className="text-[9px] text-[#2F3E46]/30 font-bold uppercase tracking-wide">25 mi</span>
+                <div className="flex justify-between mt-2">
+                  <span className="text-[10px] text-[#2F3E46]/35 dark:text-[#E8E3D8]/35 font-bold uppercase tracking-wide">1 mi</span>
+                  <span className="text-[10px] text-[#2F3E46]/35 dark:text-[#E8E3D8]/35 font-bold uppercase tracking-wide">25 mi</span>
                 </div>
               </div>
 
               {/* Vibe selections */}
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 mb-3">Your Vibe</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#E8E3D8]/40 mb-3">
+                  Your Vibe
+                </p>
                 <div className="grid grid-cols-2 gap-2">
                   {VIBE_OPTIONS.map(({ emoji, label, color }) => {
                     const active = selectedVibes.includes(label)
@@ -138,11 +155,13 @@ export function ProfilePanel({ open, onClose, profile, onVibesChange }: ProfileP
                       <button
                         key={label}
                         onClick={() => toggleVibe(label)}
-                        className="flex items-center gap-2 px-3 py-2.5 rounded-xl border text-left transition-all duration-150"
-                        style={active
-                          ? { backgroundColor: color, borderColor: color, color: "#F4F1EA" }
-                          : { backgroundColor: "rgba(255,255,255,0.4)", borderColor: "rgba(47,62,70,0.10)", color: "#2F3E46" }
-                        }
+                        className={[
+                          "flex items-center gap-2 px-3 py-2.5 rounded-xl border text-left transition-all duration-150",
+                          active
+                            ? ""
+                            : "bg-white/50 dark:bg-white/6 border-black/8 dark:border-white/10 text-[#2F3E46] dark:text-[#E8E3D8]",
+                        ].join(" ")}
+                        style={active ? { backgroundColor: color, borderColor: color, color: "#F4F1EA" } : undefined}
                       >
                         <span className="text-base flex-shrink-0">{emoji}</span>
                         <span className="text-[11px] font-bold uppercase tracking-wide leading-tight">{label}</span>

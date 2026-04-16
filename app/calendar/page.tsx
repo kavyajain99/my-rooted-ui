@@ -52,9 +52,9 @@ function UserSignalCard({
   const save = () => { onIntentChange(draft); setOpen(false) }
 
   return (
-    <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-sm space-y-5">
+    <div className="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/20 dark:border-white/8 shadow-sm space-y-5">
       <div className="flex items-center justify-between">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40">Your Signal</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#E8E3D8]/40">Your Signal</p>
         <a href="/onboarding" className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40 hover:text-[#2F3E46] transition-colors border-b border-transparent hover:border-[#2F3E46]/30">
           Edit
         </a>
@@ -65,7 +65,7 @@ function UserSignalCard({
           <div className="mt-0.5 p-1.5 rounded-lg bg-white/60 text-[#2F3E46]/30"><User className="w-3 h-3" /></div>
           <div>
             <p className="text-[9px] font-bold uppercase tracking-widest text-[#2F3E46]/30 mb-0.5">I identify as</p>
-            <p className="text-sm font-bold text-[#2F3E46]">{[profile.gender, profile.age].filter(Boolean).join(" · ")}</p>
+            <p className="text-sm font-bold text-[#2F3E46] dark:text-[#E8E3D8]">{[profile.gender, profile.age].filter(Boolean).join(" · ")}</p>
           </div>
         </div>
       )}
@@ -75,7 +75,7 @@ function UserSignalCard({
           <div className="mt-0.5 p-1.5 rounded-lg bg-white/60 text-[#2F3E46]/30"><MapPin className="w-3 h-3" /></div>
           <div>
             <p className="text-[9px] font-bold uppercase tracking-widest text-[#2F3E46]/30 mb-0.5">Neighborhood</p>
-            <p className="text-sm font-bold text-[#2F3E46]">{profile.neighborhood}</p>
+            <p className="text-sm font-bold text-[#2F3E46] dark:text-[#E8E3D8]">{profile.neighborhood}</p>
           </div>
         </div>
       )}
@@ -246,20 +246,20 @@ export default function CalendarPage() {
             {/* Profile settings button - left */}
             <button
               onClick={() => setProfileOpen(true)}
-              className="p-2 rounded-xl hover:bg-black/5 transition-colors text-[#2F3E46]/40 hover:text-[#2F3E46]"
+              className="p-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/8 transition-colors text-[#2F3E46]/40 dark:text-[#E8E3D8]/40 hover:text-[#2F3E46] dark:hover:text-[#E8E3D8]"
             >
               <Settings className="w-4 h-4" />
             </button>
 
             {/* Title - centered */}
-            <h1 className="font-display text-3xl md:text-5xl text-center text-[#2F3E46] tracking-wide flex-1 px-4">
+            <h1 className="font-display text-3xl md:text-5xl text-center text-[#2F3E46] dark:text-[#E8E3D8] tracking-wide flex-1 px-4">
               {userName ? `${userName}'s Vault` : "The Vault"}
             </h1>
 
             {/* Logout - right */}
             <button
               onClick={handleLogout}
-              className="text-[10px] font-sans uppercase tracking-[0.2em] text-[#2F3E46]/50 hover:text-[#2F3E46] transition-all whitespace-nowrap"
+              className="text-[10px] font-sans uppercase tracking-[0.2em] text-[#2F3E46]/50 dark:text-[#E8E3D8]/50 hover:text-[#2F3E46] dark:hover:text-[#E8E3D8] transition-all whitespace-nowrap"
             >
               <span className="hidden sm:inline">Exit Vault — </span>Logout
             </button>
@@ -269,7 +269,7 @@ export default function CalendarPage() {
 
             {/* Calendar — first on mobile, right on desktop */}
             <div className="lg:col-span-9 order-1 lg:order-2">
-              <div className="bg-white/40 backdrop-blur-md rounded-3xl p-6 shadow-sm border border-white/20 space-y-4">
+              <div className="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-3xl p-6 shadow-sm border border-white/20 dark:border-white/8 space-y-4">
 
                 {/* Empty state */}
                 {searchStatus === "empty" && (

@@ -94,10 +94,10 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
     <div className="flex flex-col gap-4 md:gap-6">
       {/* Header */}
       <div className="flex justify-between items-end px-1">
-        <h2 className="font-display text-3xl md:text-5xl capitalize text-[#2F3E46] tracking-tighter">
+        <h2 className="font-display text-3xl md:text-5xl capitalize text-[#2F3E46] dark:text-[#E8E3D8] tracking-tighter">
           {MONTH_NAMES[month]} <span className="opacity-30">{year}</span>
         </h2>
-        <span className="text-[10px] uppercase font-bold text-[#2F3E46]/30 tracking-[0.2em] pb-1 md:pb-2">
+        <span className="text-[10px] uppercase font-bold text-[#2F3E46]/30 dark:text-[#E8E3D8]/30 tracking-[0.2em] pb-1 md:pb-2">
           Houston, TX
         </span>
       </div>
@@ -172,13 +172,13 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
           })
 
           return (
-            <div className="rounded-2xl bg-white/40 border border-white/30 backdrop-blur-md overflow-hidden divide-y divide-black/5">
+            <div className="rounded-2xl bg-white/40 dark:bg-white/5 border border-white/30 dark:border-white/8 backdrop-blur-md overflow-hidden divide-y divide-black/5 dark:divide-white/5">
               {Object.entries(byDay).map(([dayStr, dayEvts]) => {
                 const dayNum = Number(dayStr)
                 return (
                   <div key={dayNum}>
-                    <div className="px-4 py-2 bg-white/20">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40">
+                    <div className="px-4 py-2 bg-white/20 dark:bg-white/4">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40 dark:text-[#E8E3D8]/40">
                         {MONTH_NAMES[month]} {dayNum}
                       </p>
                     </div>
@@ -194,8 +194,8 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
                         >
                           <span className="mt-1.5 w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: VIBE_DOT[v] }} />
                           <div className="min-w-0">
-                            <p className="text-sm font-bold text-[#2F3E46] leading-snug">{event.title}</p>
-                            {time && <p className="text-[11px] text-[#2F3E46]/40 mt-0.5 font-medium">{time}</p>}
+                            <p className="text-sm font-bold text-[#2F3E46] dark:text-[#E8E3D8] leading-snug">{event.title}</p>
+                            {time && <p className="text-[11px] text-[#2F3E46]/40 dark:text-[#E8E3D8]/40 mt-0.5 font-medium">{time}</p>}
                           </div>
                         </button>
                       )
@@ -210,12 +210,12 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
 
       {/* Grid */}
       <div className={viewMode === 'grid' ? '' : 'hidden md:block'}>
-      <div className="overflow-hidden rounded-2xl md:rounded-[2rem] border border-white/30 bg-white/30 backdrop-blur-sm shadow-sm">
+      <div className="overflow-hidden rounded-2xl md:rounded-[2rem] border border-white/30 dark:border-white/8 bg-white/30 dark:bg-white/4 backdrop-blur-sm shadow-sm">
 
         {/* Day-of-week header */}
-        <div className="grid grid-cols-7 border-b border-black/5 bg-white/20">
+        <div className="grid grid-cols-7 border-b border-black/5 dark:border-white/8 bg-white/20 dark:bg-white/4">
           {DAYS_OF_WEEK.map((d, i) => (
-            <div key={d} className="py-2.5 md:py-4 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#2F3E46]/40">
+            <div key={d} className="py-2.5 md:py-4 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#2F3E46]/40 dark:text-[#E8E3D8]/40">
               <span className="md:hidden">{DAYS_SHORT[i]}</span>
               <span className="hidden md:inline">{d}</span>
             </div>
@@ -242,8 +242,8 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
                 className={[
                   // Mobile: compact tap targets; Desktop: full cells
                   "min-h-[44px] md:min-h-[130px] p-1.5 md:p-3 transition-colors duration-200",
-                  !isLastRow ? "border-b border-black/5" : "",
-                  !isLastCol ? "border-r border-black/5" : "",
+                  !isLastRow ? "border-b border-black/5 dark:border-white/5" : "",
+                  !isLastCol ? "border-r border-black/5 dark:border-white/5" : "",
                   day && vibe ? VIBE_CELL_BG[vibe] : day ? "bg-white/10" : "bg-black/[0.02]",
                   day ? "cursor-pointer md:cursor-default" : "",
                 ].join(" ")}
@@ -261,15 +261,13 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
                       <span
                         className={[
                           "font-display text-xs md:text-sm font-bold leading-none transition-all duration-150",
-                          // Mobile: circle around selected day
                           "md:bg-transparent md:w-auto md:h-auto md:rounded-none md:p-0",
                           isSelected
-                            ? "w-6 h-6 rounded-full flex items-center justify-center text-white text-[11px]"
-                            : "w-6 h-6 flex items-center justify-center text-[11px] md:w-auto md:h-auto",
+                            ? "w-6 h-6 rounded-full flex items-center justify-center text-[#F4F1EA] text-[11px]"
+                            : "w-6 h-6 flex items-center justify-center text-[11px] md:w-auto md:h-auto text-[#2F3E46] dark:text-[#E8E3D8]",
                         ].join(" ")}
                         style={{
-                          color: isSelected ? "#F4F1EA" : "#2F3E46",
-                          opacity: isSelected ? 1 : dayEvents.length > 0 ? 0.8 : 0.25,
+                          opacity: isSelected ? 1 : dayEvents.length > 0 ? 0.8 : 0.3,
                           backgroundColor: isSelected ? "#2C6B5F" : "transparent",
                         }}
                       >
