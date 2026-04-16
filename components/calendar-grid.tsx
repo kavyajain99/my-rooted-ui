@@ -379,7 +379,6 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
               <div className="divide-y divide-black/5">
                 {selectedDayEvents.map(event => {
                   const v    = getVibeFromEnergy(event.social_energy || event.raw_json?.social_energy)
-                  const chip = VIBE_CHIP[v]
                   const data = event.raw_json || event
                   const time = data.time || data.event_time || null
                   const chip = isDark ? VIBE_CHIP_DARK[v] : VIBE_CHIP[v]
