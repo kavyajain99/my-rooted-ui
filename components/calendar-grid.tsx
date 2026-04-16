@@ -35,6 +35,14 @@ const VIBE_CHIP: Record<string, { bg: string; text: string }> = {
   kinetic:       { bg: "rgba(196,120,92,0.18)",  text: "#7a3a1e" },
 }
 
+// Higher-contrast chip colors for dark mode
+const VIBE_CHIP_DARK: Record<string, { bg: string; text: string }> = {
+  introspective: { bg: "rgba(122,139,124,0.28)", text: "#B8CDB8" },
+  parallel:      { bg: "rgba(212,163,115,0.28)", text: "#D4A877" },
+  cocreative:    { bg: "rgba(179,139,109,0.28)", text: "#C49870" },
+  kinetic:       { bg: "rgba(196,120,92,0.32)",  text: "#D4906E" },
+}
+
 const VIBE_DOT: Record<string, string> = {
   introspective: "#7A8B7C",
   parallel:      "#D4A373",
@@ -70,11 +78,18 @@ function getEventsForDay(events: any[], day: number, month: number, year: number
 export function CalendarGrid({ year, month, onEventClick, events = [] }: CalendarGridProps) {
   const [selectedDay, setSelectedDay] = useState<number | null>(null)
   const [viewMode, setViewMode] = useState<'grid'|'list'>('grid')
+  const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       setViewMode('list')
     }
+    // Track dark mode changes reactively
+    const check = () => setIsDark(document.documentElement.classList.contains('dark'))
+    check()
+    const observer = new MutationObserver(check)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
   }, [])
 
   const daysInMonth = new Date(year, month + 1, 0).getDate()
@@ -94,10 +109,10 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
     <div className="flex flex-col gap-4 md:gap-6">
       {/* Header */}
       <div className="flex justify-between items-end px-1">
-        <h2 className="font-display text-3xl md:text-5xl capitalize text-[#2F3E46] dark:text-[#E8E3D8] tracking-tighter">
-          {MONTH_NAMES[month]} <span className="opacity-30">{year}</span>
+        <h2 className="font-display text-3xl md:text-5xl capitalize text-[#2F3E46] dark:text-[#EAE0D0] tracking-tighter">
+          {MONTH_NAMES[month]} <span className="opacity-30 dark:opacity-40">{year}</span>
         </h2>
-        <span className="text-[10px] uppercase font-bold text-[#2F3E46]/30 dark:text-[#E8E3D8]/30 tracking-[0.2em] pb-1 md:pb-2">
+        <span className="text-[10px] uppercase font-bold text-[#2F3E46]/30 dark:text-[#68605A] tracking-[0.2em] pb-1 md:pb-2">
           Houston, TX
         </span>
       </div>
@@ -109,8 +124,8 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
             <TooltipTrigger asChild>
               <div className="flex items-center gap-1.5 cursor-default">
                 <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
-                <Icon className="w-3 h-3 text-[#2F3E46]/30" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40">{label}</span>
+                <Icon className="w-3 h-3 text-[#2F3E46]/40 dark:text-[#A89880]" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/50 dark:text-[#A89880]">{label}</span>
               </div>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[200px] rounded-xl px-3 py-2 text-[11px] leading-snug bg-[#2F3E46] text-[#F4F1EA] border-0 shadow-xl">
@@ -210,12 +225,12 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
 
       {/* Grid */}
       <div className={viewMode === 'grid' ? '' : 'hidden md:block'}>
-      <div className="overflow-hidden rounded-2xl md:rounded-[2rem] border border-white/30 dark:border-white/8 bg-white/30 dark:bg-white/4 backdrop-blur-sm shadow-sm">
+      <div className="overflow-hidden rounded-2xl md:rounded-[2rem] border border-white/30 dark:border-white/10 bg-white/30 dark:bg-[#18232A] backdrop-blur-sm shadow-sm dark:shadow-black/40">
 
         {/* Day-of-week header */}
-        <div className="grid grid-cols-7 border-b border-black/5 dark:border-white/8 bg-white/20 dark:bg-white/4">
+        <div className="grid grid-cols-7 border-b border-black/5 dark:border-white/10 bg-white/20 dark:bg-[#1F2E36]">
           {DAYS_OF_WEEK.map((d, i) => (
-            <div key={d} className="py-2.5 md:py-4 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#2F3E46]/40 dark:text-[#E8E3D8]/40">
+            <div key={d} className="py-2.5 md:py-4 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#2F3E46]/40 dark:text-[#A89880]">
               <span className="md:hidden">{DAYS_SHORT[i]}</span>
               <span className="hidden md:inline">{d}</span>
             </div>
@@ -242,9 +257,9 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
                 className={[
                   // Mobile: compact tap targets; Desktop: full cells
                   "min-h-[44px] md:min-h-[130px] p-1.5 md:p-3 transition-colors duration-200",
-                  !isLastRow ? "border-b border-black/5 dark:border-white/5" : "",
-                  !isLastCol ? "border-r border-black/5 dark:border-white/5" : "",
-                  day && vibe ? VIBE_CELL_BG[vibe] : day ? "bg-white/10" : "bg-black/[0.02]",
+                  !isLastRow ? "border-b border-black/5 dark:border-white/8" : "",
+                  !isLastCol ? "border-r border-black/5 dark:border-white/8" : "",
+                  day && vibe ? VIBE_CELL_BG[vibe] : day ? "bg-white/10 dark:bg-white/[0.03]" : "bg-black/[0.02] dark:bg-black/20",
                   day ? "cursor-pointer md:cursor-default" : "",
                 ].join(" ")}
                 onClick={() => {
@@ -264,7 +279,7 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
                           "md:bg-transparent md:w-auto md:h-auto md:rounded-none md:p-0",
                           isSelected
                             ? "w-6 h-6 rounded-full flex items-center justify-center text-[#F4F1EA] text-[11px]"
-                            : "w-6 h-6 flex items-center justify-center text-[11px] md:w-auto md:h-auto text-[#2F3E46] dark:text-[#E8E3D8]",
+                            : "w-6 h-6 flex items-center justify-center text-[11px] md:w-auto md:h-auto text-[#2F3E46] dark:text-[#C8BBAB]",
                         ].join(" ")}
                         style={{
                           opacity: isSelected ? 1 : dayEvents.length > 0 ? 0.8 : 0.3,
@@ -294,7 +309,7 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
                     <div className="hidden md:flex flex-col gap-1.5 flex-1 mt-2">
                       {visible.map(event => {
                         const v    = getVibeFromEnergy(event.social_energy || event.raw_json?.social_energy)
-                        const chip = VIBE_CHIP[v]
+                        const chip = isDark ? VIBE_CHIP_DARK[v] : VIBE_CHIP[v]
                         const data = event.raw_json || event
                         const tip  = data.vibe_check || data.description || null
                         return (
@@ -347,13 +362,13 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            className="md:hidden rounded-2xl bg-white/50 border border-white/30 backdrop-blur-md overflow-hidden"
+            className="md:hidden rounded-2xl bg-white/50 dark:bg-[#1F2E36] border border-white/30 dark:border-white/8 backdrop-blur-md overflow-hidden"
           >
-            <div className="px-4 py-3 border-b border-black/5 flex items-center justify-between">
-              <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#2F3E46]/50">
+            <div className="px-4 py-3 border-b border-black/5 dark:border-white/8 flex items-center justify-between">
+              <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#2F3E46]/50 dark:text-[#A89880]">
                 {MONTH_NAMES[month]} {selectedDay}
               </p>
-              <button onClick={() => setSelectedDay(null)} className="text-[10px] text-[#2F3E46]/30 hover:text-[#2F3E46]/60 transition-colors font-bold uppercase tracking-widest">
+              <button onClick={() => setSelectedDay(null)} className="text-[10px] text-[#2F3E46]/30 dark:text-[#68605A] hover:text-[#2F3E46]/60 dark:hover:text-[#A89880] transition-colors font-bold uppercase tracking-widest">
                 Close
               </button>
             </div>
@@ -367,17 +382,18 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
                   const chip = VIBE_CHIP[v]
                   const data = event.raw_json || event
                   const time = data.time || data.event_time || null
+                  const chip = isDark ? VIBE_CHIP_DARK[v] : VIBE_CHIP[v]
                   return (
                     <button
                       key={event.id}
                       onClick={() => onEventClick(event)}
-                      className="w-full text-left px-4 py-3.5 flex items-start gap-3 hover:bg-white/40 transition-colors active:scale-[0.99]"
+                      className="w-full text-left px-4 py-3.5 flex items-start gap-3 hover:bg-white/10 dark:hover:bg-white/5 transition-colors active:scale-[0.99]"
                     >
                       <span className="mt-1 w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: VIBE_DOT[v] }} />
                       <div className="min-w-0">
-                        <p className="text-sm font-bold text-[#2F3E46] leading-snug">{event.title}</p>
-                        {time && <p className="text-[11px] text-[#2F3E46]/40 mt-0.5 font-medium">{time}</p>}
-                        {data.vibe_check && <p className="text-[11px] italic text-[#2F3E46]/40 mt-0.5 leading-snug line-clamp-2">{data.vibe_check}</p>}
+                        <p className="text-sm font-bold text-[#2F3E46] dark:text-[#EAE0D0] leading-snug">{event.title}</p>
+                        {time && <p className="text-[11px] text-[#2F3E46]/40 dark:text-[#A89880] mt-0.5 font-medium">{time}</p>}
+                        {data.vibe_check && <p className="text-[11px] italic text-[#2F3E46]/40 dark:text-[#A89880] mt-0.5 leading-snug line-clamp-2">{data.vibe_check}</p>}
                       </div>
                       <span className="ml-auto text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-full flex-shrink-0 self-center" style={{ backgroundColor: chip.bg, color: chip.text }}>
                         {v}
@@ -396,8 +412,8 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
         {VIBE_LEGEND.map(({ key, label, dot, icon: Icon }) => (
           <div key={key} className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
-            <Icon className="w-3 h-3 text-[#2F3E46]/30" />
-            <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40">{label}</span>
+            <Icon className="w-3 h-3 text-[#2F3E46]/40 dark:text-[#A89880]" />
+            <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/50 dark:text-[#A89880]">{label}</span>
           </div>
         ))}
       </div>

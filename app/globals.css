@@ -50,38 +50,50 @@
 }
  
 .dark {
-  /* Warm Rooted dark palette — forest slate, not pure black */
-  --background: #1E2B31;
-  --foreground: #E8E3D8;
-  --card: #243038;
-  --card-foreground: #E8E3D8;
-  --popover: #243038;
-  --popover-foreground: #E8E3D8;
+  /*
+   * Rooted Dark Mode — "Quiet Luxury" Earthy System
+   * Tonal scale: bg (darkest) → card → raised → surface → text
+   *
+   * bg:      #18232A  deep charcoal-forest
+   * card:    #1F2E36  lifted from bg
+   * raised:  #263540  elevated surfaces, inputs
+   * border:  warm-white/10
+   * text-1:  #EAE0D0  warm ivory  — primary
+   * text-2:  #A89880  warm stone  — secondary
+   * text-3:  #68605A  warm ash    — muted / ghost
+   * accent:  #C4785C  clay/rust   — interactive
+   */
+  --background: #18232A;
+  --foreground: #EAE0D0;
+  --card: #1F2E36;
+  --card-foreground: #EAE0D0;
+  --popover: #263540;
+  --popover-foreground: #EAE0D0;
   --primary: #2C6B5F;
   --primary-foreground: #F4F1EA;
-  --secondary: #2D3C44;
-  --secondary-foreground: #E8E3D8;
-  --muted: #2D3C44;
-  --muted-foreground: #7A9E9A;
-  --accent: #B38B6D;
-  --accent-foreground: #E8E3D8;
+  --secondary: #263540;
+  --secondary-foreground: #EAE0D0;
+  --muted: #263540;
+  --muted-foreground: #A89880;
+  --accent: #C4785C;
+  --accent-foreground: #F4F1EA;
   --destructive: #8B3A3A;
   --destructive-foreground: #F4F1EA;
-  --border: #2D3C44;
-  --input: #243038;
+  --border: #2A3A44;
+  --input: #263540;
   --ring: #2C6B5F;
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: #243038;
-  --sidebar-foreground: #E8E3D8;
+  --sidebar: #1F2E36;
+  --sidebar-foreground: #EAE0D0;
   --sidebar-primary: #2C6B5F;
   --sidebar-primary-foreground: #F4F1EA;
-  --sidebar-accent: #2D3C44;
-  --sidebar-accent-foreground: #E8E3D8;
-  --sidebar-border: #2D3C44;
+  --sidebar-accent: #263540;
+  --sidebar-accent-foreground: #EAE0D0;
+  --sidebar-border: #2A3A44;
   --sidebar-ring: #2C6B5F;
 }
 

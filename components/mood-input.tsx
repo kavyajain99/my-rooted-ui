@@ -53,9 +53,9 @@ export function MoodInput({ onResultsFound, onSearchStart, profile }: MoodInputP
   }
 
   return (
-    <div className="space-y-5 bg-white/40 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-sm">
+    <div className="space-y-5 bg-white/40 dark:bg-[#1F2E36] backdrop-blur-md rounded-2xl p-8 border border-white/20 dark:border-white/10 shadow-sm dark:shadow-black/30">
       <div className="space-y-2">
-        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50">
+        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50 dark:text-[#A89880]">
           What type of events are you seeking?
         </label>
         <textarea
@@ -63,14 +63,14 @@ export function MoodInput({ onResultsFound, onSearchStart, profile }: MoodInputP
           onChange={e => setMood(e.target.value)}
           placeholder="e.g. I want to be around creative people without too much pressure…"
           rows={4}
-          className="w-full rounded-xl bg-white/60 border border-white/40 px-4 py-3 text-sm text-[#2F3E46] placeholder:text-[#2F3E46]/30 focus:outline-none focus:ring-2 focus:ring-[#2F3E46]/20 resize-none transition-all"
+          className="w-full rounded-xl bg-white/60 dark:bg-[#263540] border border-white/40 dark:border-white/10 px-4 py-3 text-sm text-[#2F3E46] dark:text-[#EAE0D0] placeholder:text-[#2F3E46]/30 dark:placeholder:text-[#68605A] focus:outline-none focus:ring-2 focus:ring-[#2F3E46]/20 dark:focus:ring-[#C4785C]/30 resize-none transition-all"
         />
       </div>
 
       <Button
         onClick={handleDiscover}
         disabled={isListening || !mood.trim()}
-        className="w-full bg-[#2F3E46] text-[#F4F1EA] py-6 rounded-full font-sans text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#3d4f59] transition-all shadow-lg disabled:opacity-40"
+        className="w-full bg-[#2F3E46] dark:bg-[#C4785C] text-[#F4F1EA] py-6 rounded-full font-sans text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#3d4f59] dark:hover:bg-[#D4896C] transition-all shadow-lg disabled:opacity-40"
       >
         {isListening ? (
           <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Scanning the Vault…</>

@@ -82,16 +82,16 @@ export function ProfilePanel({ open, onClose, profile, onVibesChange }: ProfileP
           <motion.div
             initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed right-0 top-0 h-full w-80 max-w-[90vw] z-50 bg-[#F4F1EA]/97 dark:bg-[#1E2B31]/97 backdrop-blur-xl shadow-2xl border-l border-black/8 dark:border-white/10 overflow-y-auto"
+            className="fixed right-0 top-0 h-full w-80 max-w-[90vw] z-50 bg-[#F4F1EA]/97 dark:bg-[#1F2E36] backdrop-blur-xl shadow-2xl border-l border-black/8 dark:border-white/10 overflow-y-auto"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-black/6 dark:border-white/8">
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50 dark:text-[#E8E3D8]/50">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50 dark:text-[#A89880]">
                 Profile Settings
               </p>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/8 transition-colors text-[#2F3E46]/40 dark:text-[#E8E3D8]/40 hover:text-[#2F3E46] dark:hover:text-[#E8E3D8]"
+                className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/8 transition-colors text-[#2F3E46]/40 dark:text-[#A89880] hover:text-[#2F3E46] dark:hover:text-[#E8E3D8]"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -101,11 +101,11 @@ export function ProfilePanel({ open, onClose, profile, onVibesChange }: ProfileP
 
               {/* Dark mode toggle */}
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#E8E3D8]/40 mb-3">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#A89880] mb-3">
                   Appearance
                 </p>
-                <div className="flex items-center justify-between bg-white/50 dark:bg-white/6 rounded-xl px-4 py-3 border border-black/8 dark:border-white/10">
-                  <span className="text-sm font-medium text-[#2F3E46] dark:text-[#E8E3D8]">Dark Mode</span>
+                <div className="flex items-center justify-between bg-white/50 dark:bg-[#263540] rounded-xl px-4 py-3 border border-black/8 dark:border-white/10">
+                  <span className="text-sm font-medium text-[#2F3E46] dark:text-[#EAE0D0]">Dark Mode</span>
                   <button
                     onClick={toggleDark}
                     aria-label="Toggle dark mode"
@@ -124,7 +124,7 @@ export function ProfilePanel({ open, onClose, profile, onVibesChange }: ProfileP
               {/* Radius slider */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#E8E3D8]/40">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#A89880]">
                     Travel Radius
                   </p>
                   <span className="text-sm font-bold text-[#2C6B5F]">{radius} mi</span>
@@ -138,14 +138,14 @@ export function ProfilePanel({ open, onClose, profile, onVibesChange }: ProfileP
                   }}
                 />
                 <div className="flex justify-between mt-2">
-                  <span className="text-[10px] text-[#2F3E46]/35 dark:text-[#E8E3D8]/35 font-bold uppercase tracking-wide">1 mi</span>
-                  <span className="text-[10px] text-[#2F3E46]/35 dark:text-[#E8E3D8]/35 font-bold uppercase tracking-wide">25 mi</span>
+                  <span className="text-[10px] text-[#2F3E46]/35 dark:text-[#EAE0D0]/35 font-bold uppercase tracking-wide">1 mi</span>
+                  <span className="text-[10px] text-[#2F3E46]/35 dark:text-[#EAE0D0]/35 font-bold uppercase tracking-wide">25 mi</span>
                 </div>
               </div>
 
               {/* Vibe selections */}
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#E8E3D8]/40 mb-3">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#A89880] mb-3">
                   Your Vibe
                 </p>
                 <div className="grid grid-cols-2 gap-2">
@@ -159,7 +159,7 @@ export function ProfilePanel({ open, onClose, profile, onVibesChange }: ProfileP
                           "flex items-center gap-2 px-3 py-2.5 rounded-xl border text-left transition-all duration-150",
                           active
                             ? ""
-                            : "bg-white/50 dark:bg-white/6 border-black/8 dark:border-white/10 text-[#2F3E46] dark:text-[#E8E3D8]",
+                            : "bg-white/50 dark:bg-[#263540] border-black/8 dark:border-white/10 text-[#2F3E46] dark:text-[#EAE0D0]",
                         ].join(" ")}
                         style={active ? { backgroundColor: color, borderColor: color, color: "#F4F1EA" } : undefined}
                       >
