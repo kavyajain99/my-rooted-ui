@@ -2,12 +2,72 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Wind, Leaf, Activity, Users } from "lucide-react"
+import { Wind, Leaf, Activity, Users, Wifi, MapPin } from "lucide-react"
 import { TopographicBackground } from "@/components/topographic-background"
 import { AppWrapper } from "@/components/app-wrapper"
 import { LandingGallery } from "@/components/landing-gallery"
 
-// ── Longevity card data ───────────────────────────────────────────────────────
+// ── Typography scale (reference, enforced throughout)
+// H1:      font-display text-4xl md:text-6xl lg:text-7xl tracking-tight
+// H2:      font-display text-3xl md:text-4xl tracking-tight
+// Body:    font-sans text-base md:text-lg leading-relaxed
+// Small:   font-sans text-sm leading-relaxed
+// Caption: font-sans text-xs font-bold uppercase tracking-[0.2em]
+
+// ── CTA button class (shared, never drifts)
+const CTA_CLASS =
+  "inline-flex items-center justify-center rounded-full bg-[#2C6B5F] px-8 py-4 font-sans text-sm font-semibold tracking-wide text-[#F4F1EA] shadow-lg transition-all duration-300 hover:bg-[#2C6B5F]/90 hover:shadow-xl"
+
+// ── Card shell (shared across all card components)
+const CARD_BASE =
+  "rounded-2xl border p-5 md:p-6 transition-colors duration-300"
+
+// ── Fade-up animation
+const fadeUp = {
+  hidden:  { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { duration: 0.55, ease: "easeOut", delay: i * 0.08 },
+  }),
+}
+
+// ── Sample Houston events (shown before sign-up wall) ────────────────────────
+const PREVIEW_EVENTS = [
+  {
+    title: "Slow Sunday Book Club",
+    tag: "Bookish",
+    neighborhood: "Montrose",
+    when: "Sun, Apr 19 · 11am",
+    desc: "Bring a book you loved. Leave with three more recommendations and at least one new friend.",
+    color: "#5C7A8B",
+  },
+  {
+    title: "Community Fermentation Workshop",
+    tag: "Fermented",
+    neighborhood: "Heights",
+    when: "Sat, Apr 18 · 2pm",
+    desc: "Learn to make your own kimchi. Bring a jar. Leave with a full one.",
+    color: "#7A8B5C",
+  },
+  {
+    title: "Sunrise Trail Run — Memorial Park",
+    tag: "Kinetic",
+    neighborhood: "Memorial",
+    when: "Sat, Apr 18 · 6:30am",
+    desc: "A run that turns into coffee. All paces welcome, seriously.",
+    color: "#C4785C",
+  },
+  {
+    title: "Vinyl & Conversation Night",
+    tag: "Tuned",
+    neighborhood: "EaDo",
+    when: "Fri, Apr 17 · 7pm",
+    desc: "Bring a record. We'll listen to one side. Talk about the rest.",
+    color: "#B36A3A",
+  },
+]
+
+// ── Longevity cards ───────────────────────────────────────────────────────────
 const LONGEVITY_CARDS = [
   { icon: Wind,     label: "Clean Air",          impact: 5,  description: "Reduces cardiovascular and respiratory disease risk.", highlight: false },
   { icon: Leaf,     label: "Healthy Diet",        impact: 10, description: "Whole foods and anti-inflammatory patterns extend lifespan.", highlight: false },
@@ -15,33 +75,71 @@ const LONGEVITY_CARDS = [
   { icon: Users,    label: "Close Relationships", impact: 50, description: "The #1 predictor of a long, healthy life, above all else.", highlight: true, sub: "The Modern Moai" },
 ]
 
+// ── Contrast table ────────────────────────────────────────────────────────────
+const CONTRAST_ROWS = [
+  {
+    metric: "Depression risk",
+    digital: "+70% among heavy social media users",
+    inperson: "–29% with strong in-person ties",
+  },
+  {
+    metric: "Longevity impact",
+    digital: "Linked to early mortality at heavy use",
+    inperson: "+50% survival odds with close relationships",
+  },
+  {
+    metric: "Wellbeing",
+    digital: "Passive scrolling worsens mood within minutes",
+    inperson: "Face-to-face contact releases oxytocin within seconds",
+  },
+]
+
+// ── Values ────────────────────────────────────────────────────────────────────
+const VALUES = [
+  {
+    icon: "🚫",
+    label: "No algorithm curating your world",
+    body: "You see what exists, not what keeps you clicking. No ranking, no feed, no black box.",
+  },
+  {
+    icon: "🚫",
+    label: "No engagement metrics",
+    body: "We don't optimize for time-on-app. We optimize for time with people you actually like.",
+  },
+  {
+    icon: "✅",
+    label: "Real events, real people, real places",
+    body: "Every listing is a physical place in Houston. Hosted by humans. Attended in person.",
+  },
+]
+
+// ── LongevityCard component ───────────────────────────────────────────────────
 function LongevityCard({
   icon: Icon, label, impact, description, highlight, sub,
 }: typeof LONGEVITY_CARDS[0]) {
-  const barPct = impact // already a real percentage — 50% fills half the bar
-
   return (
     <motion.div
-      whileHover={{ scale: 1.03, y: -5 }}
+      whileHover={{ scale: 1.03, y: -4 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
       className={[
-        "flex flex-col items-center text-center gap-3 px-4 py-7 md:py-9 rounded-2xl border cursor-default transition-colors duration-300 overflow-hidden",
-        highlight ? "bg-[#2C6B5F]/8 border-[#2C6B5F]/25 hover:bg-[#2C6B5F]/13 hover:border-[#2C6B5F]/40 hover:shadow-lg"
-                  : "bg-white/25 border-white/20 hover:bg-white/45 hover:border-white/40 hover:shadow-md",
+        CARD_BASE,
+        "flex flex-col items-center text-center gap-3 cursor-default overflow-hidden",
+        highlight
+          ? "bg-[#2C6B5F]/8 border-[#2C6B5F]/25 hover:bg-[#2C6B5F]/13 hover:border-[#2C6B5F]/40 hover:shadow-lg"
+          : "bg-white/25 border-white/20 hover:bg-white/40 hover:shadow-md",
       ].join(" ")}
     >
-      {/* Icon */}
       <Icon
-        className="w-5 h-5 md:w-6 md:h-6 flex-shrink-0"
+        className="w-5 h-5 flex-shrink-0"
         style={{ color: highlight ? "#2C6B5F" : "#2F3E46", opacity: highlight ? 0.85 : 0.38 }}
         strokeWidth={1.5}
       />
-
-      {/* Label */}
-      <div className="space-y-1 flex-shrink-0">
-        <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] leading-tight"
-           style={{ color: highlight ? "#2C6B5F" : "#2F3E46", opacity: highlight ? 1 : 0.6 }}>
+      <div className="space-y-0.5 flex-shrink-0">
+        <p
+          className="text-xs font-bold uppercase tracking-[0.15em] leading-tight"
+          style={{ color: highlight ? "#2C6B5F" : "#2F3E46", opacity: highlight ? 1 : 0.6 }}
+        >
           {label}
         </p>
         {sub && (
@@ -50,40 +148,30 @@ function LongevityCard({
           </p>
         )}
       </div>
-
-      {/* Impact % — the key number */}
-      <p className="font-display text-3xl md:text-4xl leading-none flex-shrink-0"
-         style={{ color: highlight ? "#2C6B5F" : "#2F3E46", opacity: highlight ? 1 : 0.7 }}>
+      <p
+        className="font-display text-3xl md:text-4xl leading-none flex-shrink-0"
+        style={{ color: highlight ? "#2C6B5F" : "#2F3E46", opacity: highlight ? 1 : 0.7 }}
+      >
         +{impact}%
       </p>
-
-      {/* Proportional bar */}
       <div className="w-full h-1 rounded-full flex-shrink-0" style={{ backgroundColor: "rgba(47,62,70,0.08)" }}>
         <motion.div
           className="h-full rounded-full"
           style={{ backgroundColor: highlight ? "#2C6B5F" : "#2F3E46", opacity: highlight ? 0.7 : 0.25 }}
           initial={{ width: 0 }}
-          whileInView={{ width: `${barPct}%` }}
+          whileInView={{ width: `${impact}%` }}
           viewport={{ once: true }}
           transition={{ duration: 0.9, ease: "easeOut", delay: 0.1 }}
         />
       </div>
-
-      {/* Description — fixed, never causes overflow */}
-      <p className="text-[10px] md:text-xs leading-relaxed flex-shrink-0"
-         style={{ color: highlight ? "#2C6B5F" : "#2F3E46", opacity: 0.45 }}>
+      <p
+        className="text-xs leading-relaxed flex-shrink-0"
+        style={{ color: highlight ? "#2C6B5F" : "#2F3E46", opacity: 0.45 }}
+      >
         {description}
       </p>
     </motion.div>
   )
-}
-
-const fadeUp = {
-  hidden:  { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.6, ease: "easeOut", delay: i * 0.08 },
-  }),
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
@@ -98,57 +186,177 @@ export default function LandingPage() {
         </div>
 
         {/* ── Hero ─────────────────────────────────────────────────────────── */}
-        <section className="relative z-10 mx-auto max-w-3xl text-center pt-28 pb-16 md:pt-40 md:pb-20 px-6">
-          <h1 className="font-display text-6xl tracking-tight text-foreground md:text-8xl lg:text-9xl">
-            Rooted
-          </h1>
-          <p className="mt-6 font-display text-xl text-foreground/80 md:text-2xl">
-            A belonging engine for Houston.
-          </p>
+        <section className="relative z-10 mx-auto w-full max-w-3xl text-center pt-24 pb-12 md:pt-36 md:pb-16 px-6">
 
-          <div className="mt-12 flex flex-col items-center gap-4">
-            <Link
-              href="/login"
-              className="group inline-flex items-center gap-3 rounded-full bg-primary px-8 py-4 font-sans text-base font-medium text-primary-foreground shadow-lg transition-all duration-300 hover:bg-primary/90 hover:shadow-xl md:text-lg"
-            >
-              <span>Enter the Vault</span>
-            </Link>
-            <Link
-              href="/about"
-              className="text-sm font-sans uppercase tracking-[0.2em] opacity-60 hover:opacity-100 transition-all border-b border-transparent hover:border-foreground"
-            >
-              Read the Manifesto
-            </Link>
-          </div>
+          {/* Eyebrow */}
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="mb-6 font-sans text-xs font-bold uppercase tracking-[0.3em] text-[#2C6B5F]/60"
+          >
+            Houston · Community · Belonging
+          </motion.p>
 
-          {/* Aspiration quote */}
+          {/* H1 hook */}
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, ease: "easeOut", delay: 0.1 }}
+            className="font-display text-4xl md:text-6xl lg:text-7xl text-[#2F3E46] leading-tight tracking-tight"
+          >
+            You know who you are.{" "}
+            <br className="hidden md:block" />
+            You just don't know where your people are yet.
+          </motion.h1>
+
+          {/* Visceral subheadline */}
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.45, ease: "easeOut" }}
-            className="mt-12 font-display italic text-lg md:text-xl text-[#2F3E46]/50 max-w-sm md:max-w-md mx-auto leading-relaxed"
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.25 }}
+            className="mt-5 font-sans text-base md:text-lg text-[#2F3E46]/60 max-w-lg mx-auto leading-relaxed"
+          >
+            It's Friday. You know nobody yet. Here's where to start.
+          </motion.p>
+
+          {/* CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.4, ease: "easeOut" }}
+            className="mt-8 flex flex-col items-center gap-3"
+          >
+            <Link href="/login" className={CTA_CLASS}>
+              Join Rooted
+            </Link>
+            <Link
+              href="/about"
+              className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 hover:text-[#2F3E46]/70 transition-colors border-b border-transparent hover:border-[#2F3E46]/30 pb-0.5"
+            >
+              Read the Manifesto
+            </Link>
+          </motion.div>
+
+          {/* Pull quote */}
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.55, ease: "easeOut" }}
+            className="mt-10 font-display italic text-lg md:text-xl text-[#2F3E46]/35 max-w-sm mx-auto leading-relaxed border-l-2 border-[#2C6B5F]/20 pl-5 text-left"
           >
             "Home is not just a place, but a feeling, and one you can build."
           </motion.p>
         </section>
 
+        {/* ── Event preview (above the fold / early) ───────────────────────── */}
+        <section className="relative z-10 w-full max-w-4xl mx-auto px-6 pb-20 md:pb-24">
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5 }}
+            className="font-sans text-xs font-bold uppercase tracking-[0.25em] text-[#2F3E46]/35 text-center mb-6"
+          >
+            Happening this week in Houston
+          </motion.p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {PREVIEW_EVENTS.map((ev, i) => (
+              <motion.div
+                key={ev.title}
+                custom={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-30px" }}
+                variants={fadeUp}
+                className={[CARD_BASE, "bg-white/25 border-white/25 hover:bg-white/40 hover:shadow-md"].join(" ")}
+              >
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <span
+                    className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] px-2.5 py-1 rounded-full"
+                    style={{ backgroundColor: `${ev.color}18`, color: ev.color }}
+                  >
+                    {ev.tag}
+                  </span>
+                  <span className="font-sans text-xs text-[#2F3E46]/40 whitespace-nowrap">{ev.neighborhood}</span>
+                </div>
+                <p className="font-display text-lg md:text-xl text-[#2F3E46] leading-snug mb-1">{ev.title}</p>
+                <p className="font-sans text-xs font-bold text-[#2C6B5F]/60 mb-2 tracking-wide">{ev.when}</p>
+                <p className="font-sans text-sm text-[#2F3E46]/50 leading-relaxed">{ev.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Unlock nudge */}
+          <motion.p
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={4}
+            className="mt-6 text-center font-sans text-xs text-[#2F3E46]/35"
+          >
+            Create a profile to see full details, RSVP, and find your people.{" "}
+            <Link href="/login" className="text-[#2C6B5F]/70 hover:text-[#2C6B5F] border-b border-[#2C6B5F]/30 transition-colors">
+              Join Rooted
+            </Link>
+          </motion.p>
+        </section>
+
+        {/* ── Social proof ─────────────────────────────────────────────────── */}
+        <section className="relative z-10 w-full max-w-2xl mx-auto px-6 pb-20 md:pb-24">
+          <motion.blockquote
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={fadeUp}
+            custom={0}
+            className={[CARD_BASE, "bg-[#2C6B5F]/6 border-[#2C6B5F]/15 text-center"].join(" ")}
+          >
+            <p className="font-display italic text-xl md:text-2xl text-[#2F3E46]/80 leading-relaxed mb-5">
+              "I moved here from Chicago in January and knew absolutely no one. Within two weeks of joining Rooted I had a standing Sunday hike and four people I'd actually text. It felt weirdly fast — in the best way."
+            </p>
+            <footer className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2C6B5F]/60">
+              Mia R. · Heights
+            </footer>
+          </motion.blockquote>
+        </section>
+
         {/* ── The Silent Malnutrition ───────────────────────────────────────── */}
-        <section className="relative z-10 w-full max-w-2xl mx-auto px-6 pt-16 pb-20 md:pt-20 md:pb-24 text-center">
+        <section className="relative z-10 w-full max-w-2xl mx-auto px-6 pb-20 md:pb-24 text-center">
 
           <motion.h2
             initial="hidden" whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             variants={fadeUp} custom={0}
-            className="font-display text-3xl md:text-4xl lg:text-5xl text-[#2F3E46] mb-6 md:mb-8 tracking-tight"
+            className="font-display text-3xl md:text-4xl text-[#2F3E46] mb-8 tracking-tight"
           >
             The Silent Malnutrition
           </motion.h2>
 
-          <motion.p
+          {/* First-person quote leads */}
+          <motion.blockquote
             initial="hidden" whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             variants={fadeUp} custom={1}
-            className="font-sans text-base md:text-lg leading-relaxed text-[#2F3E46]/65 mb-12 md:mb-16 max-w-xl mx-auto"
+            className={[CARD_BASE, "bg-white/20 border-white/20 mb-8 text-left"].join(" ")}
+          >
+            <p className="font-display italic text-lg md:text-xl text-[#2F3E46]/65 leading-relaxed mb-3">
+              "I had a full life on paper — a job I liked, an apartment I'd decorated, a neighborhood I'd chosen carefully. And I was deeply, quietly lonely. Not sad exactly. Just... unfed."
+            </p>
+            <footer className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/35">
+              Anonymous · Montrose
+            </footer>
+          </motion.blockquote>
+
+          {/* Cacioppo research */}
+          <motion.p
+            initial="hidden" whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={fadeUp} custom={2}
+            className="font-sans text-base md:text-lg leading-relaxed text-[#2F3E46]/65 mb-12"
           >
             Loneliness is not a character flaw. John Cacioppo's research found the brain
             processes social isolation in the same regions it processes physical pain. It is
@@ -162,7 +370,7 @@ export default function LandingPage() {
             {LONGEVITY_CARDS.map((card, i) => (
               <motion.div
                 key={card.label}
-                custom={i + 2}
+                custom={i + 3}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -175,12 +383,151 @@ export default function LandingPage() {
 
           <motion.p
             initial="hidden" whileInView="visible"
-            viewport={{ once: true }} variants={fadeUp} custom={6}
-            className="text-[10px] md:text-xs font-sans text-[#2F3E46]/30 leading-relaxed max-w-lg mx-auto"
+            viewport={{ once: true }} variants={fadeUp} custom={7}
+            className="font-sans text-xs text-[#2F3E46]/30 leading-relaxed max-w-lg mx-auto"
           >
             Source: The 80-Year Harvard Study of Adult Development &amp; Holt-Lunstad Meta-analysis.
             Close relationships are the #1 predictor of longevity.
           </motion.p>
+        </section>
+
+        {/* ── Two Kinds of Connection ───────────────────────────────────────── */}
+        <section className="relative z-10 w-full max-w-4xl mx-auto px-6 pb-20 md:pb-28">
+
+          <motion.h2
+            initial="hidden" whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={fadeUp} custom={0}
+            className="font-display text-3xl md:text-4xl text-[#2F3E46] mb-3 tracking-tight text-center"
+          >
+            Two kinds of connection
+          </motion.h2>
+          <motion.p
+            initial="hidden" whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={fadeUp} custom={1}
+            className="font-sans text-sm md:text-base text-[#2F3E46]/50 text-center mb-10 max-w-lg mx-auto leading-relaxed"
+          >
+            Not all connection is equal. The research is clear on which kind actually sustains us.
+          </motion.p>
+
+          {/* Column headers */}
+          <div className="grid grid-cols-[1fr_1.6fr_1.6fr] gap-x-3 mb-3 px-1">
+            <div />
+            <div className="flex items-center gap-1.5">
+              <Wifi className="w-3 h-3 text-[#B05C5C]/70 flex-shrink-0" strokeWidth={1.5} />
+              <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#B05C5C]/70">Digital / Social Media</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <MapPin className="w-3 h-3 text-[#2C6B5F]/70 flex-shrink-0" strokeWidth={1.5} />
+              <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#2C6B5F]/70">In-Person Community</span>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {CONTRAST_ROWS.map((row, i) => (
+              <motion.div
+                key={row.metric}
+                custom={i + 2}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-40px" }}
+                variants={fadeUp}
+                className="grid grid-cols-[1fr_1.6fr_1.6fr] gap-x-3 items-stretch"
+              >
+                <div className={[CARD_BASE, "bg-white/20 border-white/20 flex items-center"].join(" ")}>
+                  <span className="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/50 leading-snug">
+                    {row.metric}
+                  </span>
+                </div>
+                <div className={[CARD_BASE, "bg-[#B05C5C]/6 border-[#B05C5C]/12"].join(" ")}>
+                  <p className="font-sans text-xs md:text-sm text-[#8B3A3A]/80 leading-relaxed mb-2.5">{row.digital}</p>
+                  <div className="w-full h-0.5 rounded-full bg-[#B05C5C]/10">
+                    <motion.div
+                      className="h-full rounded-full bg-[#B05C5C]/35"
+                      initial={{ width: 0 }}
+                      whileInView={{ width: i === 0 ? "70%" : i === 1 ? "55%" : "65%" }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+                    />
+                  </div>
+                </div>
+                <div className={[CARD_BASE, "bg-[#2C6B5F]/6 border-[#2C6B5F]/12"].join(" ")}>
+                  <p className="font-sans text-xs md:text-sm text-[#1E4D44]/80 leading-relaxed mb-2.5">{row.inperson}</p>
+                  <div className="w-full h-0.5 rounded-full bg-[#2C6B5F]/10">
+                    <motion.div
+                      className="h-full rounded-full bg-[#2C6B5F]/50"
+                      initial={{ width: 0 }}
+                      whileInView={{ width: i === 0 ? "29%" : i === 1 ? "50%" : "80%" }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.p
+            initial="hidden" whileInView="visible"
+            viewport={{ once: true }} variants={fadeUp} custom={5}
+            className="font-sans text-xs text-[#2F3E46]/30 leading-relaxed mt-5 text-center"
+          >
+            Sources: Twenge et al. (2018) · Holt-Lunstad meta-analysis · Harvard Study of Adult Development
+          </motion.p>
+        </section>
+
+        {/* ── How Rooted is different ───────────────────────────────────────── */}
+        <section className="relative z-10 w-full max-w-4xl mx-auto px-6 pb-20 md:pb-24">
+
+          <motion.h2
+            initial="hidden" whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={fadeUp} custom={0}
+            className="font-display text-3xl md:text-4xl text-[#2F3E46] mb-3 tracking-tight text-center"
+          >
+            How Rooted is different
+          </motion.h2>
+          <motion.p
+            initial="hidden" whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={fadeUp} custom={1}
+            className="font-sans text-sm md:text-base text-[#2F3E46]/50 text-center mb-10 max-w-md mx-auto leading-relaxed"
+          >
+            We made specific choices about what not to build.
+          </motion.p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {VALUES.map((v, i) => (
+              <motion.div
+                key={v.label}
+                custom={i + 2}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-40px" }}
+                variants={fadeUp}
+                className={[CARD_BASE, "bg-white/25 border-white/25 hover:bg-white/40 hover:shadow-md"].join(" ")}
+              >
+                <p className="text-2xl mb-4">{v.icon}</p>
+                <p className="font-sans text-sm font-bold text-[#2F3E46]/80 leading-snug mb-2">{v.label}</p>
+                <p className="font-sans text-sm text-[#2F3E46]/45 leading-relaxed">{v.body}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Final CTA */}
+          <motion.div
+            initial="hidden" whileInView="visible"
+            viewport={{ once: true }} variants={fadeUp} custom={5}
+            className="mt-14 text-center flex flex-col items-center gap-3"
+          >
+            <Link href="/login" className={CTA_CLASS}>
+              Join Rooted
+            </Link>
+            <p className="font-sans text-xs text-[#2F3E46]/35 max-w-xs leading-relaxed">
+              Free to join. No algorithmic feed. No follower count. Just Houston.
+            </p>
+          </motion.div>
         </section>
 
         {/* ── Gallery ──────────────────────────────────────────────────────── */}
