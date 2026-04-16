@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Moon, Palette, Activity, Coffee } from "lucide-react"
 
 interface CalendarGridProps {
   year: number
@@ -49,10 +50,10 @@ const VIBE_CELL_BG: Record<string, string> = {
 }
 
 const VIBE_LEGEND = [
-  { key: "introspective", label: "Introspective",  dot: "#7A8B7C" },
-  { key: "cocreative",    label: "Co-creative",    dot: "#B38B6D" },
-  { key: "kinetic",       label: "Kinetic",        dot: "#C4785C" },
-  { key: "parallel",      label: "Social / Mixed", dot: "#D4A373" },
+  { key: "introspective", label: "Introspective", dot: "#7A8B7C", icon: Moon,     description: "Quieter, personal events — meditation, journaling, or intimate gatherings." },
+  { key: "cocreative",    label: "Co-creative",   dot: "#B38B6D", icon: Palette,  description: "Hands-on collaboration — art, music, cooking, or making things together." },
+  { key: "kinetic",       label: "Kinetic",        dot: "#C4785C", icon: Activity, description: "High-energy movement — sports, dance, or outdoor adventures." },
+  { key: "parallel",      label: "Social / Mixed", dot: "#D4A373", icon: Coffee,   description: "Easy connection — community events and gatherings with no agenda." },
 ]
 
 const MAX_VISIBLE = 2
@@ -68,6 +69,13 @@ function getEventsForDay(events: any[], day: number, month: number, year: number
 
 export function CalendarGrid({ year, month, onEventClick, events = [] }: CalendarGridProps) {
   const [selectedDay, setSelectedDay] = useState<number | null>(null)
+  const [viewMode, setViewMode] = useState<'grid'|'list'>('grid')
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setViewMode('list')
+    }
+  }, [])
 
   const daysInMonth = new Date(year, month + 1, 0).getDate()
   const startDay    = new Date(year, month, 1).getDay()
@@ -96,15 +104,112 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
 
       {/* Legend — desktop only */}
       <div className="hidden md:flex flex-wrap items-center gap-x-5 gap-y-2 px-1">
-        {VIBE_LEGEND.map(({ key, label, dot }) => (
-          <div key={key} className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
-            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40">{label}</span>
-          </div>
+        {VIBE_LEGEND.map(({ key, label, dot, icon: Icon, description }) => (
+          <Tooltip key={key}>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-1.5 cursor-default">
+                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
+                <Icon className="w-3 h-3 text-[#2F3E46]/30" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40">{label}</span>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[200px] rounded-xl px-3 py-2 text-[11px] leading-snug bg-[#2F3E46] text-[#F4F1EA] border-0 shadow-xl">
+              {description}
+            </TooltipContent>
+          </Tooltip>
         ))}
       </div>
 
+      {/* Mobile: view toggle */}
+      <div className="md:hidden flex items-center gap-2 px-1">
+        <button
+          onClick={() => setViewMode('grid')}
+          className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.15em] transition-colors"
+          style={viewMode === 'grid'
+            ? { backgroundColor: "#2F3E46", color: "#F4F1EA" }
+            : { backgroundColor: "rgba(47,62,70,0.08)", color: "rgba(47,62,70,0.4)" }}
+        >
+          Grid
+        </button>
+        <button
+          onClick={() => setViewMode('list')}
+          className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.15em] transition-colors"
+          style={viewMode === 'list'
+            ? { backgroundColor: "#2F3E46", color: "#F4F1EA" }
+            : { backgroundColor: "rgba(47,62,70,0.08)", color: "rgba(47,62,70,0.4)" }}
+        >
+          List
+        </button>
+      </div>
+
+      {/* Mobile: list view */}
+      <div className={viewMode === 'list' ? 'md:hidden' : 'hidden'}>
+        {(() => {
+          const monthEvents = events
+            .filter(e => {
+              const src = e.event_date || e.raw_json?.event_date || e.raw_json?.date
+              if (!src) return false
+              const d = new Date(src)
+              return d.getUTCMonth() === month && d.getUTCFullYear() === year
+            })
+            .sort((a, b) => {
+              const sa = a.event_date || a.raw_json?.event_date || a.raw_json?.date || ""
+              const sb = b.event_date || b.raw_json?.event_date || b.raw_json?.date || ""
+              return sa < sb ? -1 : sa > sb ? 1 : 0
+            })
+
+          if (monthEvents.length === 0) {
+            return <p className="text-sm text-[#2F3E46]/40 text-center py-8">No events this month.</p>
+          }
+
+          // Group by day
+          const byDay: Record<number, any[]> = {}
+          monthEvents.forEach(e => {
+            const src = e.event_date || e.raw_json?.event_date || e.raw_json?.date
+            const day = new Date(src).getUTCDate()
+            if (!byDay[day]) byDay[day] = []
+            byDay[day].push(e)
+          })
+
+          return (
+            <div className="rounded-2xl bg-white/40 border border-white/30 backdrop-blur-md overflow-hidden divide-y divide-black/5">
+              {Object.entries(byDay).map(([dayStr, dayEvts]) => {
+                const dayNum = Number(dayStr)
+                return (
+                  <div key={dayNum}>
+                    <div className="px-4 py-2 bg-white/20">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40">
+                        {MONTH_NAMES[month]} {dayNum}
+                      </p>
+                    </div>
+                    {dayEvts.map(event => {
+                      const v = getVibeFromEnergy(event.social_energy || event.raw_json?.social_energy)
+                      const data = event.raw_json || event
+                      const time = data.time || data.event_time || null
+                      return (
+                        <button
+                          key={event.id}
+                          onClick={() => onEventClick(event)}
+                          className="w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-white/40 transition-colors active:scale-[0.99]"
+                        >
+                          <span className="mt-1.5 w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: VIBE_DOT[v] }} />
+                          <div className="min-w-0">
+                            <p className="text-sm font-bold text-[#2F3E46] leading-snug">{event.title}</p>
+                            {time && <p className="text-[11px] text-[#2F3E46]/40 mt-0.5 font-medium">{time}</p>}
+                          </div>
+                        </button>
+                      )
+                    })}
+                  </div>
+                )
+              })}
+            </div>
+          )
+        })()}
+      </div>
+
       {/* Grid */}
+      <div className={viewMode === 'grid' ? '' : 'hidden md:block'}>
       <div className="overflow-hidden rounded-2xl md:rounded-[2rem] border border-white/30 bg-white/30 backdrop-blur-sm shadow-sm">
 
         {/* Day-of-week header */}
@@ -233,6 +338,7 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
           })}
         </div>
       </div>
+      </div>
 
       {/* Mobile: day detail panel */}
       <AnimatePresence>
@@ -289,9 +395,10 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
 
       {/* Mobile: legend at bottom */}
       <div className="md:hidden flex flex-wrap items-center gap-x-4 gap-y-1.5 px-1">
-        {VIBE_LEGEND.map(({ key, label, dot }) => (
+        {VIBE_LEGEND.map(({ key, label, dot, icon: Icon }) => (
           <div key={key} className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
+            <Icon className="w-3 h-3 text-[#2F3E46]/30" />
             <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40">{label}</span>
           </div>
         ))}

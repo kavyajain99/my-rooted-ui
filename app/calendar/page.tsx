@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic'
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { createBrowserClient } from '@supabase/ssr'
-import { MapPin, User, Sparkles, MessageSquare, Pencil, Check, ChevronLeft, ChevronRight, SearchX } from "lucide-react"
+import { MapPin, User, Sparkles, MessageSquare, Pencil, Check, ChevronLeft, ChevronRight, SearchX, Settings } from "lucide-react"
 import { AnimatePresence } from "framer-motion"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { MoodInput } from "@/components/mood-input"
@@ -13,6 +13,7 @@ import { CalendarGrid } from "@/components/calendar-grid"
 import { AppWrapper } from "@/components/app-wrapper"
 import { TopographicBackground } from "@/components/topographic-background"
 import { EventCard } from "@/components/event-card"
+import { ProfilePanel } from "@/components/profile-panel"
 
 const SAGE = "#2C6B5F"
 
@@ -27,16 +28,14 @@ interface RootedProfile {
 }
 
 const TRAIT_COLORS: Record<string, string> = {
-  Curious:        "#C4785C",
-  Reflective:     "#5C7A8B",
-  Adventurous:    "#B36A3A",
-  Mindful:        "#7A8B7C",
-  Compassionate:  "#B38B6D",
-  Creative:       "#8B6D5C",
-  Grounded:       "#5C7A5C",
-  Purposeful:     "#2F3E46",
-  "Open-hearted": "#C47A7A",
-  Resilient:      "#6D7A8B",
+  Forager:   "#5C7A5C",
+  Bookish:   "#5C7A8B",
+  Handmade:  "#8B6D5C",
+  Rooted:    "#2F3E46",
+  Fermented: "#7A8B5C",
+  Ritualist: "#6D5C7A",
+  Tuned:     "#B36A3A",
+  Embodied:  "#7A8B7C",
 }
 
 // ── Editable "Your Signal" sidebar ───────────────────────────────
@@ -140,6 +139,7 @@ export default function CalendarPage() {
   const [profile, setProfile]             = useState<RootedProfile | null>(null)
   const [userName, setUserName]           = useState<string | null>(null)
   const [searchStatus, setSearchStatus]   = useState<SearchStatus>("idle")
+  const [profileOpen, setProfileOpen]     = useState(false)
   // Default to April 2026 where our seed data lives
   const [displayYear, setDisplayYear]     = useState(2026)
   const [displayMonth, setDisplayMonth]   = useState(3) // April = 3
@@ -240,16 +240,30 @@ export default function CalendarPage() {
       <main className="relative min-h-screen pb-20">
         <TopographicBackground />
 
-        <div className="absolute top-6 right-6 z-50">
-          <button onClick={handleLogout} className="text-[10px] font-sans uppercase tracking-[0.2em] text-[#2F3E46]/60 hover:text-[#2F3E46] transition-all hover:tracking-[0.3em]">
-            Exit Vault — Logout
-          </button>
-        </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-8 md:pt-12">
+          {/* Header row */}
+          <div className="flex items-center justify-between mb-8 md:mb-14">
+            {/* Profile settings button - left */}
+            <button
+              onClick={() => setProfileOpen(true)}
+              className="p-2 rounded-xl hover:bg-black/5 transition-colors text-[#2F3E46]/40 hover:text-[#2F3E46]"
+            >
+              <Settings className="w-4 h-4" />
+            </button>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
-          <h1 className="font-display text-4xl md:text-6xl mb-8 md:mb-14 text-center text-[#2F3E46] tracking-wide">
-            {userName ? `${userName}'s Vault` : "The Vault"}
-          </h1>
+            {/* Title - centered */}
+            <h1 className="font-display text-3xl md:text-5xl text-center text-[#2F3E46] tracking-wide flex-1 px-4">
+              {userName ? `${userName}'s Vault` : "The Vault"}
+            </h1>
+
+            {/* Logout - right */}
+            <button
+              onClick={handleLogout}
+              className="text-[10px] font-sans uppercase tracking-[0.2em] text-[#2F3E46]/50 hover:text-[#2F3E46] transition-all whitespace-nowrap"
+            >
+              <span className="hidden sm:inline">Exit Vault — </span>Logout
+            </button>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-12">
 
@@ -301,6 +315,19 @@ export default function CalendarPage() {
             <EventCard event={selectedEvent} onClose={() => setSelectedEvent(null)} />
           )}
         </AnimatePresence>
+
+        <ProfilePanel
+          open={profileOpen}
+          onClose={() => setProfileOpen(false)}
+          profile={profile}
+          onVibesChange={(vibes) => {
+            if (profile) {
+              const updated = { ...profile, traits: vibes }
+              setProfile(updated)
+              sessionStorage.setItem("rootedProfile", JSON.stringify(updated))
+            }
+          }}
+        />
       </main>
     </AppWrapper>
   )

@@ -56,7 +56,7 @@ export function MoodInput({ onResultsFound, onSearchStart, profile }: MoodInputP
     <div className="space-y-5 bg-white/40 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-sm">
       <div className="space-y-2">
         <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50">
-          What kind of connection are you seeking?
+          What type of events are you seeking?
         </label>
         <textarea
           value={mood}

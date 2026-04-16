@@ -36,20 +36,19 @@ const NEIGHBORHOOD_OPTIONS = [
   "Pearland", "Friendswood", "League City", "Clear Lake", "Pasadena",
   // East
   "Baytown", "La Porte",
+  "Energy Corridor", "Memorial", "Rice Village", "Washington Ave / Military Corridor", "Timbergrove / Lazybrook",
   // Other
   "Other",
 ]
 const TRAIT_OPTIONS = [
-  { label: "Curious",       color: "#C4785C", description: "Open-minded explorers who love learning and new ideas." },
-  { label: "Reflective",    color: "#5C7A8B", description: "Deep thinkers who value introspection and meaningful conversation." },
-  { label: "Adventurous",   color: "#B36A3A", description: "Drawn to nature, travel, or stepping outside comfort zones." },
-  { label: "Mindful",       color: "#7A8B7C", description: "Seekers of meditation, presence, and emotional awareness." },
-  { label: "Compassionate", color: "#B38B6D", description: "Empathetic, kind, and caring for people, planet, and animals." },
-  { label: "Creative",      color: "#8B6D5C", description: "Makers, artists, writers, and DIY or fringe creatives." },
-  { label: "Grounded",      color: "#5C7A5C", description: "Stable, calm presence connected to nature and roots." },
-  { label: "Purposeful",    color: "#2F3E46", description: "Values-driven, advocacy-minded, and impact-focused." },
-  { label: "Open-hearted",  color: "#C47A7A", description: "Warm, emotionally available, focused on authentic connection." },
-  { label: "Resilient",     color: "#6D7A8B", description: "Rebuilt after transitions, moved often, or grown through change." },
+  { emoji: "🌿", label: "Forager",   color: "#5C7A5C", description: "Happiest outside; drawn to trails, seasons, and soil." },
+  { emoji: "📖", label: "Bookish",   color: "#5C7A8B", description: "Dog-eared pages, marginalia, reading alone in public." },
+  { emoji: "🧵", label: "Handmade",  color: "#8B6D5C", description: "Mender, maker, tactile thinker who builds with their hands." },
+  { emoji: "✊", label: "Rooted",    color: "#2F3E46", description: "Values-driven and action-oriented; here to make a difference." },
+  { emoji: "🫙", label: "Fermented", color: "#7A8B5C", description: "Slow food, seasonal eating, farmers market regulars." },
+  { emoji: "🕯️", label: "Ritualist", color: "#6D5C7A", description: "Builds meaning through ceremony, habit, and intentional practice." },
+  { emoji: "🎵", label: "Tuned",     color: "#B36A3A", description: "Live music seeker, record collector, sound as a love language." },
+  { emoji: "🧘", label: "Embodied",  color: "#7A8B7C", description: "Movement-minded; yoga, dance, sport, or just walks that clear the head." },
 ]
 
 // ── Reusable chip (demographics) ─────────────────────────────────
@@ -85,8 +84,8 @@ function ChipButton({
 
 // ── Trait card (personality, with description + check) ───────────
 function TraitCard({
-  label, description, selected, onClick, color,
-}: { label: string; description: string; selected: boolean; onClick: () => void; color: string }) {
+  emoji, label, description, selected, onClick, color,
+}: { emoji: string; label: string; description: string; selected: boolean; onClick: () => void; color: string }) {
   return (
     <motion.button
       onClick={onClick}
@@ -115,6 +114,7 @@ function TraitCard({
           <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
         </span>
       )}
+      <p className="text-2xl mb-1">{emoji}</p>
       <p
         className="text-xs font-bold tracking-wide mb-1 pr-5"
         style={{ color: selected ? "#F4F1EA" : "#2F3E46" }}
@@ -326,9 +326,10 @@ export default function OnboardingPage() {
                   <div className="space-y-3">
                     <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50">I'm drawn to</label>
                     <div className="grid grid-cols-2 gap-2">
-                      {TRAIT_OPTIONS.map(({ label, color, description }) => (
+                      {TRAIT_OPTIONS.map(({ emoji, label, color, description }) => (
                         <TraitCard
                           key={label}
+                          emoji={emoji}
                           label={label}
                           description={description}
                           selected={traits.includes(label)}
