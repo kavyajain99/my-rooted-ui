@@ -12,7 +12,7 @@ const _instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   title: 'Rooted | Houston Community Calendar',
-  description: 'Find your vibe in Houston. A personal monthly calendar for discovering community events.',
+  description: 'Find your roots in Houston. A personal monthly calendar for discovering community events.',
   icons: {
     icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
     shortcut: [{ url: '/icon.svg', type: 'image/svg+xml' }],

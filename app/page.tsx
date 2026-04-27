@@ -126,48 +126,37 @@ function LongevityCard({
         CARD_BASE,
         "flex flex-col items-center text-center gap-3 cursor-default overflow-hidden",
         highlight
-          ? "bg-[#2C6B5F]/8 border-[#2C6B5F]/25 hover:bg-[#2C6B5F]/13 hover:border-[#2C6B5F]/40 hover:shadow-lg"
-          : "bg-white/25 border-white/20 hover:bg-white/40 hover:shadow-md",
+          ? "bg-[#2C6B5F]/8 border-[#2C6B5F]/25 dark:bg-[#2C6B5F]/18 dark:border-[#2C6B5F]/40 hover:bg-[#2C6B5F]/13 hover:border-[#2C6B5F]/40 hover:shadow-lg"
+          : "bg-white/25 border-white/20 dark:bg-white/6 dark:border-white/10 hover:bg-white/40 dark:hover:bg-white/10 hover:shadow-md",
       ].join(" ")}
     >
       <Icon
-        className="w-5 h-5 flex-shrink-0"
-        style={{ color: highlight ? "#2C6B5F" : "#2F3E46", opacity: highlight ? 0.85 : 0.38 }}
+        className={["w-5 h-5 flex-shrink-0", highlight ? "text-[#2C6B5F]/85" : "text-[#2F3E46]/40 dark:text-[#EAE0D0]/50"].join(" ")}
         strokeWidth={1.5}
       />
       <div className="space-y-0.5 flex-shrink-0">
-        <p
-          className="text-xs font-bold uppercase tracking-[0.15em] leading-tight"
-          style={{ color: highlight ? "#2C6B5F" : "#2F3E46", opacity: highlight ? 1 : 0.6 }}
-        >
+        <p className={["text-xs font-bold uppercase tracking-[0.15em] leading-tight", highlight ? "text-[#2C6B5F]" : "text-[#2F3E46]/60 dark:text-[#EAE0D0]/70"].join(" ")}>
           {label}
         </p>
         {sub && (
-          <p className="text-[9px] font-medium tracking-wide" style={{ color: "#2C6B5F", opacity: 0.55 }}>
+          <p className="text-[9px] font-medium tracking-wide text-[#2C6B5F]/55">
             {sub}
           </p>
         )}
       </div>
-      <p
-        className="font-display text-3xl md:text-4xl leading-none flex-shrink-0"
-        style={{ color: highlight ? "#2C6B5F" : "#2F3E46", opacity: highlight ? 1 : 0.7 }}
-      >
+      <p className={["font-display text-3xl md:text-4xl leading-none flex-shrink-0", highlight ? "text-[#2C6B5F]" : "text-[#2F3E46]/70 dark:text-[#EAE0D0]/80"].join(" ")}>
         +{impact}%
       </p>
-      <div className="w-full h-1 rounded-full flex-shrink-0" style={{ backgroundColor: "rgba(47,62,70,0.08)" }}>
+      <div className="w-full h-1 rounded-full flex-shrink-0 bg-[#2F3E46]/8 dark:bg-white/10">
         <motion.div
-          className="h-full rounded-full"
-          style={{ backgroundColor: highlight ? "#2C6B5F" : "#2F3E46", opacity: highlight ? 0.7 : 0.25 }}
+          className={["h-full rounded-full", highlight ? "bg-[#2C6B5F]/70" : "bg-[#2F3E46]/25 dark:bg-[#EAE0D0]/25"].join(" ")}
           initial={{ width: 0 }}
           whileInView={{ width: `${impact}%` }}
           viewport={{ once: true }}
           transition={{ duration: 0.9, ease: "easeOut", delay: 0.1 }}
         />
       </div>
-      <p
-        className="text-xs leading-relaxed flex-shrink-0"
-        style={{ color: highlight ? "#2C6B5F" : "#2F3E46", opacity: 0.45 }}
-      >
+      <p className={["text-xs leading-relaxed flex-shrink-0", highlight ? "text-[#2C6B5F]/70" : "text-[#2F3E46]/45 dark:text-[#EAE0D0]/55"].join(" ")}>
         {description}
       </p>
     </motion.div>
@@ -203,7 +192,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, ease: "easeOut", delay: 0.1 }}
-            className="font-display text-4xl md:text-6xl lg:text-7xl text-[#2F3E46] leading-tight tracking-tight"
+            className="font-display text-4xl md:text-6xl lg:text-7xl text-[#2F3E46] dark:text-[#EAE0D0] leading-tight tracking-tight"
           >
             You know who you are.{" "}
             <br className="hidden md:block" />
@@ -215,7 +204,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.25 }}
-            className="mt-5 font-sans text-base md:text-lg text-[#2F3E46]/60 max-w-lg mx-auto leading-relaxed"
+            className="mt-5 font-sans text-base md:text-lg text-[#2F3E46]/60 dark:text-[#EAE0D0]/65 max-w-lg mx-auto leading-relaxed"
           >
             It's Friday. You know nobody yet. Here's where to start.
           </motion.p>
@@ -232,7 +221,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/about"
-              className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 hover:text-[#2F3E46]/70 transition-colors border-b border-transparent hover:border-[#2F3E46]/30 pb-0.5"
+              className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#EAE0D0]/45 hover:text-[#2F3E46]/70 dark:hover:text-[#EAE0D0]/70 transition-colors border-b border-transparent hover:border-[#2F3E46]/30 pb-0.5"
             >
               Read the Manifesto
             </Link>
@@ -243,7 +232,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.55, ease: "easeOut" }}
-            className="mt-10 font-display italic text-lg md:text-xl text-[#2F3E46]/35 max-w-sm mx-auto leading-relaxed border-l-2 border-[#2C6B5F]/20 pl-5 text-left"
+            className="mt-10 font-display italic text-lg md:text-xl text-[#2F3E46]/35 dark:text-[#EAE0D0]/50 max-w-sm mx-auto leading-relaxed border-l-2 border-[#2C6B5F]/20 pl-5 text-left"
           >
             "Home is not just a place, but a feeling, and one you can build."
           </motion.p>
@@ -257,7 +246,7 @@ export default function LandingPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.5 }}
-            className="font-sans text-xs font-bold uppercase tracking-[0.25em] text-[#2F3E46]/35 text-center mb-6"
+            className="font-sans text-xs font-bold uppercase tracking-[0.25em] text-[#2F3E46]/35 dark:text-[#EAE0D0]/45 text-center mb-6"
           >
             Happening this week in Houston
           </motion.p>
@@ -271,7 +260,7 @@ export default function LandingPage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-30px" }}
                 variants={fadeUp}
-                className={[CARD_BASE, "bg-white/25 border-white/25 hover:bg-white/40 hover:shadow-md"].join(" ")}
+                className={[CARD_BASE, "bg-white/25 border-white/25 dark:bg-white/6 dark:border-white/10 hover:bg-white/40 dark:hover:bg-white/10 hover:shadow-md"].join(" ")}
               >
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <span
@@ -280,11 +269,11 @@ export default function LandingPage() {
                   >
                     {ev.tag}
                   </span>
-                  <span className="font-sans text-xs text-[#2F3E46]/40 whitespace-nowrap">{ev.neighborhood}</span>
+                  <span className="font-sans text-xs text-[#2F3E46]/40 dark:text-[#EAE0D0]/45 whitespace-nowrap">{ev.neighborhood}</span>
                 </div>
-                <p className="font-display text-lg md:text-xl text-[#2F3E46] leading-snug mb-1">{ev.title}</p>
-                <p className="font-sans text-xs font-bold text-[#2C6B5F]/60 mb-2 tracking-wide">{ev.when}</p>
-                <p className="font-sans text-sm text-[#2F3E46]/50 leading-relaxed">{ev.desc}</p>
+                <p className="font-display text-lg md:text-xl text-[#2F3E46] dark:text-[#EAE0D0] leading-snug mb-1">{ev.title}</p>
+                <p className="font-sans text-xs font-bold text-[#2C6B5F]/60 dark:text-[#7AAF9F]/80 mb-2 tracking-wide">{ev.when}</p>
+                <p className="font-sans text-sm text-[#2F3E46]/50 dark:text-[#EAE0D0]/55 leading-relaxed">{ev.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -296,7 +285,7 @@ export default function LandingPage() {
             viewport={{ once: true }}
             variants={fadeUp}
             custom={4}
-            className="mt-6 text-center font-sans text-xs text-[#2F3E46]/35"
+            className="mt-6 text-center font-sans text-xs text-[#2F3E46]/35 dark:text-[#EAE0D0]/40"
           >
             Create a profile to see full details, RSVP, and find your people.{" "}
             <Link href="/login" className="text-[#2C6B5F]/70 hover:text-[#2C6B5F] border-b border-[#2C6B5F]/30 transition-colors">
@@ -313,9 +302,9 @@ export default function LandingPage() {
             viewport={{ once: true, margin: "-60px" }}
             variants={fadeUp}
             custom={0}
-            className={[CARD_BASE, "bg-[#2C6B5F]/6 border-[#2C6B5F]/15 text-center"].join(" ")}
+            className={[CARD_BASE, "bg-[#2C6B5F]/6 border-[#2C6B5F]/15 dark:bg-[#2C6B5F]/15 dark:border-[#2C6B5F]/30 text-center"].join(" ")}
           >
-            <p className="font-display italic text-xl md:text-2xl text-[#2F3E46]/80 leading-relaxed mb-5">
+            <p className="font-display italic text-xl md:text-2xl text-[#2F3E46]/80 dark:text-[#EAE0D0]/85 leading-relaxed mb-5">
               "I moved here from Chicago in January and knew absolutely no one. Within two weeks of joining Rooted I had a standing Sunday hike and four people I'd actually text. It felt weirdly fast — in the best way."
             </p>
             <footer className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2C6B5F]/60">
@@ -331,7 +320,7 @@ export default function LandingPage() {
             initial="hidden" whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             variants={fadeUp} custom={0}
-            className="font-display text-3xl md:text-4xl text-[#2F3E46] mb-8 tracking-tight"
+            className="font-display text-3xl md:text-4xl text-[#2F3E46] dark:text-[#EAE0D0] mb-8 tracking-tight"
           >
             The Silent Malnutrition
           </motion.h2>
@@ -341,12 +330,12 @@ export default function LandingPage() {
             initial="hidden" whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             variants={fadeUp} custom={1}
-            className={[CARD_BASE, "bg-white/20 border-white/20 mb-8 text-left"].join(" ")}
+            className={[CARD_BASE, "bg-white/20 border-white/20 dark:bg-white/5 dark:border-white/10 mb-8 text-left"].join(" ")}
           >
-            <p className="font-display italic text-lg md:text-xl text-[#2F3E46]/65 leading-relaxed mb-3">
+            <p className="font-display italic text-lg md:text-xl text-[#2F3E46]/65 dark:text-[#EAE0D0]/70 leading-relaxed mb-3">
               "I had a full life on paper — a job I liked, an apartment I'd decorated, a neighborhood I'd chosen carefully. And I was deeply, quietly lonely. Not sad exactly. Just... unfed."
             </p>
-            <footer className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/35">
+            <footer className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/35 dark:text-[#EAE0D0]/40">
               Anonymous · Montrose
             </footer>
           </motion.blockquote>
@@ -356,7 +345,7 @@ export default function LandingPage() {
             initial="hidden" whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             variants={fadeUp} custom={2}
-            className="font-sans text-base md:text-lg leading-relaxed text-[#2F3E46]/65 mb-12"
+            className="font-sans text-base md:text-lg leading-relaxed text-[#2F3E46]/65 dark:text-[#EAE0D0]/65 mb-12"
           >
             Loneliness is not a character flaw. John Cacioppo's research found the brain
             processes social isolation in the same regions it processes physical pain. It is
@@ -384,7 +373,7 @@ export default function LandingPage() {
           <motion.p
             initial="hidden" whileInView="visible"
             viewport={{ once: true }} variants={fadeUp} custom={7}
-            className="font-sans text-xs text-[#2F3E46]/30 leading-relaxed max-w-lg mx-auto"
+            className="font-sans text-xs text-[#2F3E46]/30 dark:text-[#EAE0D0]/35 leading-relaxed max-w-lg mx-auto"
           >
             Source: The 80-Year Harvard Study of Adult Development &amp; Holt-Lunstad Meta-analysis.
             Close relationships are the #1 predictor of longevity.
@@ -398,7 +387,7 @@ export default function LandingPage() {
             initial="hidden" whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             variants={fadeUp} custom={0}
-            className="font-display text-3xl md:text-4xl text-[#2F3E46] mb-3 tracking-tight text-center"
+            className="font-display text-3xl md:text-4xl text-[#2F3E46] dark:text-[#EAE0D0] mb-3 tracking-tight text-center"
           >
             Two kinds of connection
           </motion.h2>
@@ -406,7 +395,7 @@ export default function LandingPage() {
             initial="hidden" whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             variants={fadeUp} custom={1}
-            className="font-sans text-sm md:text-base text-[#2F3E46]/50 text-center mb-10 max-w-lg mx-auto leading-relaxed"
+            className="font-sans text-sm md:text-base text-[#2F3E46]/50 dark:text-[#EAE0D0]/60 text-center mb-10 max-w-lg mx-auto leading-relaxed"
           >
             Not all connection is equal. The research is clear on which kind actually sustains us.
           </motion.p>
@@ -435,13 +424,13 @@ export default function LandingPage() {
                 variants={fadeUp}
                 className="grid grid-cols-[1fr_1.6fr_1.6fr] gap-x-3 items-stretch"
               >
-                <div className={[CARD_BASE, "bg-white/20 border-white/20 flex items-center"].join(" ")}>
-                  <span className="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/50 leading-snug">
+                <div className={[CARD_BASE, "bg-white/20 border-white/20 dark:bg-white/5 dark:border-white/10 flex items-center"].join(" ")}>
+                  <span className="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/50 dark:text-[#EAE0D0]/55 leading-snug">
                     {row.metric}
                   </span>
                 </div>
-                <div className={[CARD_BASE, "bg-[#B05C5C]/6 border-[#B05C5C]/12"].join(" ")}>
-                  <p className="font-sans text-xs md:text-sm text-[#8B3A3A]/80 leading-relaxed mb-2.5">{row.digital}</p>
+                <div className={[CARD_BASE, "bg-[#B05C5C]/6 border-[#B05C5C]/12 dark:bg-[#B05C5C]/12 dark:border-[#B05C5C]/20"].join(" ")}>
+                  <p className="font-sans text-xs md:text-sm text-[#8B3A3A]/80 dark:text-[#E8A8A8] leading-relaxed mb-2.5">{row.digital}</p>
                   <div className="w-full h-0.5 rounded-full bg-[#B05C5C]/10">
                     <motion.div
                       className="h-full rounded-full bg-[#B05C5C]/35"
@@ -452,8 +441,8 @@ export default function LandingPage() {
                     />
                   </div>
                 </div>
-                <div className={[CARD_BASE, "bg-[#2C6B5F]/6 border-[#2C6B5F]/12"].join(" ")}>
-                  <p className="font-sans text-xs md:text-sm text-[#1E4D44]/80 leading-relaxed mb-2.5">{row.inperson}</p>
+                <div className={[CARD_BASE, "bg-[#2C6B5F]/6 border-[#2C6B5F]/12 dark:bg-[#2C6B5F]/15 dark:border-[#2C6B5F]/25"].join(" ")}>
+                  <p className="font-sans text-xs md:text-sm text-[#1E4D44]/80 dark:text-[#8AC5B8] leading-relaxed mb-2.5">{row.inperson}</p>
                   <div className="w-full h-0.5 rounded-full bg-[#2C6B5F]/10">
                     <motion.div
                       className="h-full rounded-full bg-[#2C6B5F]/50"
@@ -471,7 +460,7 @@ export default function LandingPage() {
           <motion.p
             initial="hidden" whileInView="visible"
             viewport={{ once: true }} variants={fadeUp} custom={5}
-            className="font-sans text-xs text-[#2F3E46]/30 leading-relaxed mt-5 text-center"
+            className="font-sans text-xs text-[#2F3E46]/30 dark:text-[#EAE0D0]/35 leading-relaxed mt-5 text-center"
           >
             Sources: Twenge et al. (2018) · Holt-Lunstad meta-analysis · Harvard Study of Adult Development
           </motion.p>
@@ -484,7 +473,7 @@ export default function LandingPage() {
             initial="hidden" whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             variants={fadeUp} custom={0}
-            className="font-display text-3xl md:text-4xl text-[#2F3E46] mb-3 tracking-tight text-center"
+            className="font-display text-3xl md:text-4xl text-[#2F3E46] dark:text-[#EAE0D0] mb-3 tracking-tight text-center"
           >
             How Rooted is different
           </motion.h2>
@@ -492,7 +481,7 @@ export default function LandingPage() {
             initial="hidden" whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             variants={fadeUp} custom={1}
-            className="font-sans text-sm md:text-base text-[#2F3E46]/50 text-center mb-10 max-w-md mx-auto leading-relaxed"
+            className="font-sans text-sm md:text-base text-[#2F3E46]/50 dark:text-[#EAE0D0]/60 text-center mb-10 max-w-md mx-auto leading-relaxed"
           >
             We made specific choices about what not to build.
           </motion.p>
@@ -506,11 +495,11 @@ export default function LandingPage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-40px" }}
                 variants={fadeUp}
-                className={[CARD_BASE, "bg-white/25 border-white/25 hover:bg-white/40 hover:shadow-md"].join(" ")}
+                className={[CARD_BASE, "bg-white/25 border-white/25 dark:bg-white/6 dark:border-white/10 hover:bg-white/40 dark:hover:bg-white/10 hover:shadow-md"].join(" ")}
               >
                 <p className="text-2xl mb-4">{v.icon}</p>
-                <p className="font-sans text-sm font-bold text-[#2F3E46]/80 leading-snug mb-2">{v.label}</p>
-                <p className="font-sans text-sm text-[#2F3E46]/45 leading-relaxed">{v.body}</p>
+                <p className="font-sans text-sm font-bold text-[#2F3E46]/80 dark:text-[#EAE0D0]/85 leading-snug mb-2">{v.label}</p>
+                <p className="font-sans text-sm text-[#2F3E46]/45 dark:text-[#EAE0D0]/55 leading-relaxed">{v.body}</p>
               </motion.div>
             ))}
           </div>
@@ -519,12 +508,15 @@ export default function LandingPage() {
           <motion.div
             initial="hidden" whileInView="visible"
             viewport={{ once: true }} variants={fadeUp} custom={5}
-            className="mt-14 text-center flex flex-col items-center gap-3"
+            className="mt-14 text-center flex flex-col items-center gap-4"
           >
+            <p className="font-display text-2xl md:text-3xl text-[#2F3E46] dark:text-[#EAE0D0] tracking-tight">
+              Are you ready to branch out with Rooted?
+            </p>
             <Link href="/login" className={CTA_CLASS}>
               Join Rooted
             </Link>
-            <p className="font-sans text-xs text-[#2F3E46]/35 max-w-xs leading-relaxed">
+            <p className="font-sans text-xs text-[#2F3E46]/35 dark:text-[#EAE0D0]/40 max-w-xs leading-relaxed">
               Free to join. No algorithmic feed. No follower count. Just Houston.
             </p>
           </motion.div>

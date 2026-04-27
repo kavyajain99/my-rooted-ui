@@ -14,6 +14,7 @@ import { AppWrapper } from "@/components/app-wrapper"
 import { TopographicBackground } from "@/components/topographic-background"
 import { EventCard } from "@/components/event-card"
 import { ProfilePanel } from "@/components/profile-panel"
+import { SavedLeavesCard } from "@/components/saved-leaves-card"
 
 const SAGE = "#2C6B5F"
 
@@ -55,16 +56,16 @@ function UserSignalCard({
     <div className="bg-white/40 dark:bg-[#1F2E36] backdrop-blur-md rounded-2xl p-6 border border-white/20 dark:border-white/10 shadow-sm dark:shadow-black/30 space-y-5">
       <div className="flex items-center justify-between">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#A89880]">Your Signal</p>
-        <a href="/onboarding" className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40 hover:text-[#2F3E46] transition-colors border-b border-transparent hover:border-[#2F3E46]/30">
+        <a href="/onboarding" className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40 dark:text-[#A89880]/60 hover:text-[#2F3E46] dark:hover:text-[#EAE0D0] transition-colors border-b border-transparent hover:border-[#2F3E46]/30">
           Edit
         </a>
       </div>
 
       {(profile.gender || profile.age) && (
         <div className="flex items-start gap-3">
-          <div className="mt-0.5 p-1.5 rounded-lg bg-white/60 text-[#2F3E46]/30"><User className="w-3 h-3" /></div>
+          <div className="mt-0.5 p-1.5 rounded-lg bg-white/60 dark:bg-white/8 text-[#2F3E46]/30 dark:text-[#A89880]/60"><User className="w-3 h-3" /></div>
           <div>
-            <p className="text-[9px] font-bold uppercase tracking-widest text-[#2F3E46]/30 mb-0.5">I identify as</p>
+            <p className="text-[9px] font-bold uppercase tracking-widest text-[#2F3E46]/30 dark:text-[#A89880] mb-0.5">I identify as</p>
             <p className="text-sm font-bold text-[#2F3E46] dark:text-[#EAE0D0]">{[profile.gender, profile.age].filter(Boolean).join(" · ")}</p>
           </div>
         </div>
@@ -72,9 +73,9 @@ function UserSignalCard({
 
       {profile.neighborhood && (
         <div className="flex items-start gap-3">
-          <div className="mt-0.5 p-1.5 rounded-lg bg-white/60 text-[#2F3E46]/30"><MapPin className="w-3 h-3" /></div>
+          <div className="mt-0.5 p-1.5 rounded-lg bg-white/60 dark:bg-white/8 text-[#2F3E46]/30 dark:text-[#A89880]/60"><MapPin className="w-3 h-3" /></div>
           <div>
-            <p className="text-[9px] font-bold uppercase tracking-widest text-[#2F3E46]/30 mb-0.5">Neighborhood</p>
+            <p className="text-[9px] font-bold uppercase tracking-widest text-[#2F3E46]/30 dark:text-[#A89880] mb-0.5">Neighborhood</p>
             <p className="text-sm font-bold text-[#2F3E46] dark:text-[#EAE0D0]">{profile.neighborhood}</p>
           </div>
         </div>
@@ -82,9 +83,9 @@ function UserSignalCard({
 
       {profile.traits.length > 0 && (
         <div className="flex items-start gap-3">
-          <div className="mt-0.5 p-1.5 rounded-lg bg-white/60 text-[#2F3E46]/30"><Sparkles className="w-3 h-3" /></div>
+          <div className="mt-0.5 p-1.5 rounded-lg bg-white/60 dark:bg-white/8 text-[#2F3E46]/30 dark:text-[#A89880]/60"><Sparkles className="w-3 h-3" /></div>
           <div>
-            <p className="text-[9px] font-bold uppercase tracking-widest text-[#2F3E46]/30 mb-1.5">Vibe</p>
+            <p className="text-[9px] font-bold uppercase tracking-widest text-[#2F3E46]/30 dark:text-[#A89880] mb-1.5">Roots</p>
             <div className="flex flex-wrap gap-1.5">
               {profile.traits.map(trait => (
                 <span key={trait} className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide text-white" style={{ backgroundColor: TRAIT_COLORS[trait] || "#2F3E46" }}>
@@ -98,18 +99,18 @@ function UserSignalCard({
 
       {profile.intent && (
         <div className="flex items-start gap-3">
-          <div className="mt-0.5 p-1.5 rounded-lg bg-white/60 text-[#2F3E46]/30"><MessageSquare className="w-3 h-3" /></div>
+          <div className="mt-0.5 p-1.5 rounded-lg bg-white/60 dark:bg-white/8 text-[#2F3E46]/30 dark:text-[#A89880]/60"><MessageSquare className="w-3 h-3" /></div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5 mb-0.5">
-              <p className="text-[9px] font-bold uppercase tracking-widest text-[#2F3E46]/30">About You</p>
+              <p className="text-[9px] font-bold uppercase tracking-widest text-[#2F3E46]/30 dark:text-[#A89880]">About You</p>
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                   <button className="p-0.5 rounded hover:bg-black/5 transition-colors">
-                    <Pencil className="w-2.5 h-2.5 text-[#2F3E46]/30 hover:text-[#2F3E46]/60" />
+                    <Pencil className="w-2.5 h-2.5 text-[#2F3E46]/30 dark:text-[#A89880]/50 hover:text-[#2F3E46]/60 dark:hover:text-[#A89880]" />
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-80 p-4 rounded-2xl border border-white/30 bg-[#F4F1EA]/95 backdrop-blur-md shadow-xl" align="start">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#2F3E46]/40 mb-3">Edit your intent</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#2F3E46]/40 mb-3">Tend your intent</p>
                   <textarea
                     value={draft}
                     onChange={e => setDraft(e.target.value)}
@@ -122,7 +123,7 @@ function UserSignalCard({
                 </PopoverContent>
               </Popover>
             </div>
-            <p className="text-xs italic text-[#2F3E46]/60 leading-relaxed">
+            <p className="text-xs italic text-[#2F3E46]/60 dark:text-[#EAE0D0]/70 leading-relaxed">
               "{profile.intent.length > 100 ? profile.intent.slice(0, 100) + "…" : profile.intent}"
             </p>
           </div>
@@ -140,6 +141,8 @@ export default function CalendarPage() {
   const [userName, setUserName]           = useState<string | null>(null)
   const [searchStatus, setSearchStatus]   = useState<SearchStatus>("idle")
   const [profileOpen, setProfileOpen]     = useState(false)
+  const [savedEvents, setSavedEvents]     = useState<any[]>([])
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   // Default to April 2026 where our seed data lives
   const [displayYear, setDisplayYear]     = useState(2026)
   const [displayMonth, setDisplayMonth]   = useState(3) // April = 3
@@ -159,6 +162,7 @@ export default function CalendarPage() {
 
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) return
+      setCurrentUserId(user.id)
 
       // Restore name
       const cachedName = sessionStorage.getItem("rootedName")
@@ -184,6 +188,15 @@ export default function CalendarPage() {
           sessionStorage.setItem("rootedProfile", JSON.stringify(p))
         }
       }
+
+      // 3. Load saved events (Your Leaves)
+      const { data: savedData } = await supabase
+        .from("saved_events")
+        .select("event_id, events(*)")
+        .eq("user_id", user.id)
+      if (savedData) {
+        setSavedEvents(savedData.map((s: any) => s.events).filter(Boolean))
+      }
     })
   }, [])
 
@@ -207,6 +220,28 @@ export default function CalendarPage() {
       const top = Object.values(counts).sort((a, b) => b.count - a.count)[0]
       if (top) { setDisplayYear(top.year); setDisplayMonth(top.month) }
     }
+  }
+
+  const handleSaveToggle = async (event: any, saved: boolean) => {
+    if (!currentUserId || !event?.id) return
+    if (saved) {
+      await supabase.from("saved_events").upsert(
+        { user_id: currentUserId, event_id: event.id },
+        { onConflict: "user_id,event_id" }
+      )
+      setSavedEvents(prev => prev.some(e => e.id === event.id) ? prev : [...prev, event])
+    } else {
+      await supabase.from("saved_events").delete()
+        .eq("user_id", currentUserId).eq("event_id", event.id)
+      setSavedEvents(prev => prev.filter(e => e.id !== event.id))
+    }
+  }
+
+  const handleUnsave = async (eventId: string) => {
+    if (!currentUserId) return
+    await supabase.from("saved_events").delete()
+      .eq("user_id", currentUserId).eq("event_id", eventId)
+    setSavedEvents(prev => prev.filter(e => e.id !== eventId))
   }
 
   const handleIntentChange = async (newIntent: string) => {
@@ -305,6 +340,11 @@ export default function CalendarPage() {
             <div className="lg:col-span-3 order-2 lg:order-1 space-y-6">
               {profile && <UserSignalCard profile={profile} onIntentChange={handleIntentChange} />}
               <MoodInput onResultsFound={handleResults} onSearchStart={handleSearchStart} profile={profile} />
+              <SavedLeavesCard
+                savedEvents={savedEvents}
+                onUnsave={handleUnsave}
+                onEventClick={setSelectedEvent}
+              />
             </div>
 
           </div>
@@ -312,7 +352,12 @@ export default function CalendarPage() {
 
         <AnimatePresence>
           {selectedEvent && (
-            <EventCard event={selectedEvent} onClose={() => setSelectedEvent(null)} />
+            <EventCard
+              event={selectedEvent}
+              onClose={() => setSelectedEvent(null)}
+              isSaved={savedEvents.some(e => e.id === selectedEvent?.id)}
+              onSaveToggle={(saved) => handleSaveToggle(selectedEvent, saved)}
+            />
           )}
         </AnimatePresence>
 

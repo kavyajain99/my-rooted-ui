@@ -319,12 +319,12 @@ export default function OnboardingPage() {
                   className="space-y-8"
                 >
                   <div className="space-y-1">
-                    <h2 className="font-display text-2xl md:text-3xl text-[#2F3E46] leading-tight">What's your vibe?</h2>
+                    <h2 className="font-display text-2xl md:text-3xl text-[#2F3E46] leading-tight">What are your roots?</h2>
                     <p className="text-sm text-[#2F3E46]/60 font-medium">Select all that speak to you — the more you share, the better we match.</p>
                   </div>
 
                   <div className="space-y-3">
-                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50">I'm drawn to</label>
+                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50">I'm rooted in</label>
                     <div className="grid grid-cols-2 gap-2">
                       {TRAIT_OPTIONS.map(({ emoji, label, color, description }) => (
                         <TraitCard

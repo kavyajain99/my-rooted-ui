@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { X, MapPin, Calendar, Clock, Sparkles, CreditCard, ShoppingBag, Info, CalendarPlus, ChevronDown } from "lucide-react"
+import { X, MapPin, Calendar, Clock, Sparkles, CreditCard, ShoppingBag, Info, CalendarPlus, ChevronDown, Bookmark } from "lucide-react"
 
 function buildCalendarDates(eventDate: string, eventTime: string) {
   const baseDate = new Date(eventDate)
@@ -141,11 +141,20 @@ function downloadIcal(event: any, data: any) {
 interface EventCardProps {
   event: any
   onClose: () => void
+  isSaved?: boolean
+  onSaveToggle?: (saved: boolean) => void
 }
 
-export function EventCard({ event, onClose }: EventCardProps) {
+export function EventCard({ event, onClose, isSaved = false, onSaveToggle }: EventCardProps) {
   const [calOpen, setCalOpen] = useState(false)
+  const [saved, setSaved] = useState(isSaved)
   if (!event) return null
+
+  const handleSaveToggle = () => {
+    const next = !saved
+    setSaved(next)
+    onSaveToggle?.(next)
+  }
 
   // Use the rich JSON if it exists, otherwise fallback to top level
   const data = event.raw_json || event;
@@ -256,8 +265,20 @@ export function EventCard({ event, onClose }: EventCardProps) {
               className="flex w-full items-center justify-center rounded-2xl py-6 font-sans text-xs font-bold uppercase tracking-[0.2em] text-white shadow-xl transition-all hover:scale-[1.01] active:scale-[0.98]"
               style={{ backgroundColor: energy.color || '#2F3E46' }}
             >
-              Secure your spot
+              Plant your spot
             </a>
+
+            {/* Plant This — save to Your Leaves */}
+            <button
+              onClick={handleSaveToggle}
+              className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 font-sans text-xs font-bold uppercase tracking-[0.2em] border-2 transition-all"
+              style={saved
+                ? { backgroundColor: energy.color || '#2C6B5F', borderColor: energy.color || '#2C6B5F', color: 'white' }
+                : { borderColor: 'rgba(47,62,70,0.15)', color: 'rgba(47,62,70,0.6)' }}
+            >
+              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-white stroke-white" : ""}`} />
+              {saved ? "Planted in Your Grove" : "Plant This"}
+            </button>
 
             {/* Add to Calendar */}
             <div className="relative">

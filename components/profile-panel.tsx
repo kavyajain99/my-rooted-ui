@@ -146,7 +146,7 @@ export function ProfilePanel({ open, onClose, profile, onVibesChange }: ProfileP
               {/* Vibe selections */}
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#A89880] mb-3">
-                  Your Vibe
+                  Your Roots
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   {VIBE_OPTIONS.map(({ emoji, label, color }) => {

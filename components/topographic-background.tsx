@@ -2,7 +2,7 @@
 
 export function TopographicBackground() {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-30">
+    <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-30 dark:opacity-55 dark:mix-blend-screen">
       <svg
         viewBox="0 0 1440 400"
         fill="none"
