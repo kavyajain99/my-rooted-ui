@@ -37,7 +37,18 @@ export async function POST(req: Request) {
 
     if (error) throw error
 
-    return NextResponse.json({ events })
+    const FAITH_KEYWORDS = /\b(church|chapel|cathedral|mosque|synagogue|temple|parish|diocese|ministry|sermon|worship|prayer|bible|quran|torah|sabbath|mass|baptis|confirmati|communion|holy spirit|god's|christ|jesus|allah|yahweh|religious service|faith community|congregation|revival|evangel)\b/i
+
+    const wantsFaith = FAITH_KEYWORDS.test(intentText)
+
+    const filtered = wantsFaith
+      ? events
+      : (events ?? []).filter((e: any) => {
+          const text = `${e.title ?? ""} ${e.vibe_check ?? ""}`
+          return !FAITH_KEYWORDS.test(text)
+        })
+
+    return NextResponse.json({ events: filtered })
   } catch (error: any) {
     console.error("Search API Error:", error)
     return NextResponse.json({ error: error.message }, { status: 500 })
