@@ -32,6 +32,13 @@ export default function AboutPage() {
             </p>
           </header>
 
+          {/* Opening epigraph */}
+          <blockquote className="mb-16 border-l-2 border-[#2C6B5F]/30 pl-6">
+            <p className="font-display italic text-xl md:text-2xl text-[#2F3E46]/60 leading-relaxed">
+              "Home is not just a place, but a feeling, and one you can build."
+            </p>
+          </blockquote>
+
           {/* The Narrative */}
           <div className="space-y-8 font-sans text-base md:text-lg leading-relaxed text-[#2F3E46]/90">
             <section className="space-y-6">

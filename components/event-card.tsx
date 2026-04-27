@@ -265,7 +265,7 @@ export function EventCard({ event, onClose, isSaved = false, onSaveToggle }: Eve
               className="flex w-full items-center justify-center rounded-2xl py-6 font-sans text-xs font-bold uppercase tracking-[0.2em] text-white shadow-xl transition-all hover:scale-[1.01] active:scale-[0.98]"
               style={{ backgroundColor: energy.color || '#2F3E46' }}
             >
-              Plant your spot
+              Learn more
             </a>
 
             {/* Plant This — save to Your Leaves */}

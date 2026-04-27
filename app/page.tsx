@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Wind, Leaf, Activity, Users, Wifi, MapPin } from "lucide-react"
+import { Wind, Leaf, Activity, Users, Wifi, MapPin, ArrowRight } from "lucide-react"
 import { TopographicBackground } from "@/components/topographic-background"
 import { AppWrapper } from "@/components/app-wrapper"
 import { LandingGallery } from "@/components/landing-gallery"
@@ -221,21 +221,12 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/about"
-              className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#EAE0D0]/45 hover:text-[#2F3E46]/70 dark:hover:text-[#EAE0D0]/70 transition-colors border-b border-transparent hover:border-[#2F3E46]/30 pb-0.5"
+              className="inline-flex items-center gap-2 rounded-full border border-[#2F3E46]/25 dark:border-[#EAE0D0]/20 px-6 py-3 font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/60 dark:text-[#EAE0D0]/60 hover:border-[#2F3E46]/50 dark:hover:border-[#EAE0D0]/40 hover:text-[#2F3E46] dark:hover:text-[#EAE0D0] transition-all duration-200"
             >
-              Read the Manifesto
+              Read the Manifesto <ArrowRight className="w-3 h-3" />
             </Link>
           </motion.div>
 
-          {/* Pull quote */}
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.55, ease: "easeOut" }}
-            className="mt-10 font-display italic text-lg md:text-xl text-[#2F3E46]/35 dark:text-[#EAE0D0]/50 max-w-sm mx-auto leading-relaxed border-l-2 border-[#2C6B5F]/20 pl-5 text-left"
-          >
-            "Home is not just a place, but a feeling, and one you can build."
-          </motion.p>
         </section>
 
         {/* ── Event preview (above the fold / early) ───────────────────────── */}
@@ -305,7 +296,7 @@ export default function LandingPage() {
             className={[CARD_BASE, "bg-[#2C6B5F]/6 border-[#2C6B5F]/15 dark:bg-[#2C6B5F]/15 dark:border-[#2C6B5F]/30 text-center"].join(" ")}
           >
             <p className="font-display italic text-xl md:text-2xl text-[#2F3E46]/80 dark:text-[#EAE0D0]/85 leading-relaxed mb-5">
-              "I moved here from Chicago in January and knew absolutely no one. Within two weeks of joining Rooted I had a standing Sunday hike and four people I'd actually text. It felt weirdly fast — in the best way."
+              "I moved here from Chicago not knowing a single person. Two weeks in I had a standing Sunday hike and a group chat that actually gets used. I genuinely did not expect it to happen that fast."
             </p>
             <footer className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2C6B5F]/60">
               Mia R. · Heights
@@ -333,7 +324,7 @@ export default function LandingPage() {
             className={[CARD_BASE, "bg-white/20 border-white/20 dark:bg-white/5 dark:border-white/10 mb-8 text-left"].join(" ")}
           >
             <p className="font-display italic text-lg md:text-xl text-[#2F3E46]/65 dark:text-[#EAE0D0]/70 leading-relaxed mb-3">
-              "I had a full life on paper — a job I liked, an apartment I'd decorated, a neighborhood I'd chosen carefully. And I was deeply, quietly lonely. Not sad exactly. Just... unfed."
+              "On paper my life looked great. Good job, nice apartment, neighborhood I actually chose. But I kept going home on Friday nights to nobody. That specific kind of quiet gets heavy after a while."
             </p>
             <footer className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/35 dark:text-[#EAE0D0]/40">
               Anonymous · Montrose
