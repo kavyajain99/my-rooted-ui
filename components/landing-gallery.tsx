@@ -19,7 +19,7 @@ export function LandingGallery() {
       <motion.p
         initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.6 }}
-        className="text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-[#2F3E46]/35 text-center mb-5"
+        className="text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/35 text-center mb-5"
       >
         Houston, Connecting
       </motion.p>

@@ -135,11 +135,11 @@ function LongevityCard({
         strokeWidth={1.5}
       />
       <div className="space-y-0.5 flex-shrink-0">
-        <p className={["text-xs font-bold uppercase tracking-[0.15em] leading-tight", highlight ? "text-[#2C6B5F]" : "text-[#2F3E46]/60 dark:text-[#EAE0D0]/70"].join(" ")}>
+        <p className={["text-xs font-bold uppercase tracking-[0.2em] leading-tight", highlight ? "text-[#2C6B5F]" : "text-[#2F3E46]/60 dark:text-[#EAE0D0]/70"].join(" ")}>
           {label}
         </p>
         {sub && (
-          <p className="text-[9px] font-medium tracking-wide text-[#2C6B5F]/55">
+          <p className="text-xs font-medium tracking-wide text-[#2C6B5F]/55">
             {sub}
           </p>
         )}
@@ -182,7 +182,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="mb-6 font-sans text-xs font-bold uppercase tracking-[0.3em] text-[#2C6B5F]/60"
+            className="mb-6 font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2C6B5F]/60"
           >
             Houston · Community · Belonging
           </motion.p>
@@ -237,7 +237,7 @@ export default function LandingPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.5 }}
-            className="font-sans text-xs font-bold uppercase tracking-[0.25em] text-[#2F3E46]/35 dark:text-[#EAE0D0]/45 text-center mb-6"
+            className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/35 dark:text-[#EAE0D0]/45 text-center mb-6"
           >
             Happening this week in Houston
           </motion.p>
@@ -255,7 +255,7 @@ export default function LandingPage() {
               >
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <span
-                    className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] px-2.5 py-1 rounded-full"
+                    className="font-sans text-xs font-bold uppercase tracking-[0.2em] px-2.5 py-1 rounded-full"
                     style={{ backgroundColor: `${ev.color}18`, color: ev.color }}
                   >
                     {ev.tag}
@@ -396,7 +396,7 @@ export default function LandingPage() {
             <div />
             <div className="flex items-center gap-1.5">
               <Wifi className="w-3 h-3 text-[#B05C5C]/70 flex-shrink-0" strokeWidth={1.5} />
-              <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#B05C5C]/70">Digital / Social Media</span>
+              <span className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#B05C5C]/70">Digital / Social Media</span>
             </div>
             <div className="flex items-center gap-1.5">
               <MapPin className="w-3 h-3 text-[#2C6B5F]/70 flex-shrink-0" strokeWidth={1.5} />
@@ -416,7 +416,7 @@ export default function LandingPage() {
                 className="grid grid-cols-[1fr_1.6fr_1.6fr] gap-x-3 items-stretch"
               >
                 <div className={[CARD_BASE, "bg-white/20 border-white/20 dark:bg-white/5 dark:border-white/10 flex items-center"].join(" ")}>
-                  <span className="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/50 dark:text-[#EAE0D0]/55 leading-snug">
+                  <span className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50 dark:text-[#EAE0D0]/55 leading-snug">
                     {row.metric}
                   </span>
                 </div>
@@ -501,7 +501,7 @@ export default function LandingPage() {
             viewport={{ once: true }} variants={fadeUp} custom={5}
             className="mt-14 text-center flex flex-col items-center gap-4"
           >
-            <p className="font-display text-2xl md:text-3xl text-[#2F3E46] dark:text-[#EAE0D0] tracking-tight">
+            <p className="font-display text-3xl md:text-4xl text-[#2F3E46] dark:text-[#EAE0D0] tracking-tight">
               Are you ready to branch out with Rooted?
             </p>
             <Link href="/login" className={CTA_CLASS}>
