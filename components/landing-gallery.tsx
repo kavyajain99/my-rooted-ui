@@ -32,7 +32,7 @@ export function LandingGallery() {
           className="md:col-span-7 aspect-[16/9] relative overflow-hidden rounded-2xl"
         >
           <Image
-            src="/images/sound-bath-houston.png"
+            src="/images/sound-bath-houston.webp"
             alt="Sound Bath Houston"
             fill
             className="object-cover object-center"
@@ -49,7 +49,7 @@ export function LandingGallery() {
           className="md:col-span-5 aspect-[3/2] md:aspect-auto relative overflow-hidden rounded-2xl"
         >
           <Image
-            src="/images/freaks-run-club.png"
+            src="/images/freaks-run-club.webp"
             alt="Freaks Run Club Houston"
             fill
             className="object-cover object-center"
@@ -72,7 +72,7 @@ export function LandingGallery() {
           className="md:col-span-12 aspect-[4/1] relative overflow-hidden rounded-2xl"
         >
           <Image
-            src="/images/houston-plant-con.png"
+            src="/images/houston-plant-con.webp"
             alt="Houston Plant Con"
             fill
             className="object-cover object-[center_15%]"
