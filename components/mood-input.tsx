@@ -76,7 +76,7 @@ export function MoodInput({ onResultsFound, onSearchStart, profile }: MoodInputP
         className="w-full bg-[#2F3E46] dark:bg-[#C4785C] text-[#F4F1EA] py-6 rounded-full font-sans text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#3d4f59] dark:hover:bg-[#D4896C] transition-all shadow-lg disabled:opacity-60"
       >
         {isListening ? (
-          <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Scanning the Vault…</>
+          <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Scanning…</>
         ) : (
           <><Search className="mr-2 h-4 w-4" /> Discover Events</>
         )}
