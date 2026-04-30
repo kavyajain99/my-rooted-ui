@@ -56,15 +56,18 @@ export function MoodInput({ onResultsFound, onSearchStart, profile }: MoodInputP
     <div className="space-y-5 bg-white/40 dark:bg-[#1F2E36] backdrop-blur-md rounded-2xl p-8 border border-white/20 dark:border-white/10 shadow-sm dark:shadow-black/30">
       <div className="space-y-2">
         <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50 dark:text-[#A89880]">
-          What type of events are you seeking?
+          Describe what you're looking for
         </label>
         <textarea
           value={mood}
           onChange={e => setMood(e.target.value)}
-          placeholder="e.g. I want to be around creative people without too much pressure…"
+          placeholder={"Try: \"I want to feel more connected to people who are into slow living and being outside\" or \"something low-key where I might actually talk to someone\""}
           rows={4}
-          className="w-full rounded-xl bg-white/60 dark:bg-[#263540] border border-white/40 dark:border-white/10 px-4 py-3 text-sm text-[#2F3E46] dark:text-[#EAE0D0] placeholder:text-[#2F3E46]/30 dark:placeholder:text-[#68605A] focus:outline-none focus:ring-2 focus:ring-[#2F3E46]/20 dark:focus:ring-[#C4785C]/30 resize-none transition-all"
+          className="w-full rounded-xl bg-white/60 dark:bg-[#263540] border border-white/40 dark:border-white/10 px-4 py-3 text-sm text-[#2F3E46] dark:text-[#EAE0D0] placeholder:text-[#2F3E46]/25 dark:placeholder:text-[#68605A] focus:outline-none focus:ring-2 focus:ring-[#2F3E46]/20 dark:focus:ring-[#C4785C]/30 resize-none transition-all"
         />
+        <p className="text-[10px] text-[#2F3E46]/30 dark:text-[#68605A] leading-relaxed">
+          Natural language works. Describe a feeling or a vibe, not a category.
+        </p>
       </div>
 
       <Button

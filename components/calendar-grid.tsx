@@ -3,13 +3,15 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { Moon, Palette, Activity, Coffee } from "lucide-react"
+import { Moon, Palette, Activity, Coffee, ChevronLeft, ChevronRight } from "lucide-react"
 
 interface CalendarGridProps {
   year: number
   month: number          // 0 = January … 11 = December
   onEventClick: (event: any) => void
   events: any[]
+  onPrev?: () => void
+  onNext?: () => void
 }
 
 const DAYS_OF_WEEK  = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -75,7 +77,7 @@ function getEventsForDay(events: any[], day: number, month: number, year: number
   })
 }
 
-export function CalendarGrid({ year, month, onEventClick, events = [] }: CalendarGridProps) {
+export function CalendarGrid({ year, month, onEventClick, events = [], onPrev, onNext }: CalendarGridProps) {
   const [selectedDay, setSelectedDay] = useState<number | null>(null)
   const [viewMode, setViewMode] = useState<'grid'|'list'>('grid')
   const [isDark, setIsDark] = useState(false)
@@ -109,12 +111,32 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
     <div className="flex flex-col gap-4 md:gap-6">
       {/* Header */}
       <div className="flex justify-between items-end px-1">
-        <h2 className="font-display text-3xl md:text-5xl capitalize text-[#2F3E46] dark:text-[#EAE0D0] tracking-tighter">
-          {MONTH_NAMES[month]} <span className="opacity-30 dark:opacity-40">{year}</span>
-        </h2>
-        <span className="text-[10px] uppercase font-bold text-[#2F3E46]/30 dark:text-[#68605A] tracking-[0.2em] pb-1 md:pb-2">
-          Houston, TX
-        </span>
+        <div>
+          <h2 className="font-display text-3xl md:text-5xl capitalize text-[#2F3E46] dark:text-[#EAE0D0] tracking-tighter">
+            {MONTH_NAMES[month]} <span className="opacity-30 dark:opacity-40">{year}</span>
+          </h2>
+          <span className="text-[10px] uppercase font-bold text-[#2F3E46]/30 dark:text-[#68605A] tracking-[0.2em]">
+            Houston, TX
+          </span>
+        </div>
+        {(onPrev || onNext) && (
+          <div className="flex items-center gap-1 pb-1">
+            <button
+              onClick={onPrev}
+              className="flex items-center gap-1 px-3 py-2 rounded-xl bg-white/40 dark:bg-white/6 border border-white/30 dark:border-white/10 hover:bg-white/70 dark:hover:bg-white/12 transition-all text-[#2F3E46]/60 dark:text-[#A89880] hover:text-[#2F3E46] dark:hover:text-[#EAE0D0] shadow-sm"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span className="text-[10px] font-bold uppercase tracking-widest hidden sm:inline">Prev</span>
+            </button>
+            <button
+              onClick={onNext}
+              className="flex items-center gap-1 px-3 py-2 rounded-xl bg-white/40 dark:bg-white/6 border border-white/30 dark:border-white/10 hover:bg-white/70 dark:hover:bg-white/12 transition-all text-[#2F3E46]/60 dark:text-[#A89880] hover:text-[#2F3E46] dark:hover:text-[#EAE0D0] shadow-sm"
+            >
+              <span className="text-[10px] font-bold uppercase tracking-widest hidden sm:inline">Next</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Legend — desktop only */}
@@ -225,6 +247,17 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
 
       {/* Grid */}
       <div className={viewMode === 'grid' ? '' : 'hidden md:block'}>
+      {events.length > 0 && cells.every((day) => !day || getEventsForDay(events, day, month, year).length === 0) && (
+        <div className="rounded-2xl bg-[#F4F1EA]/60 dark:bg-white/5 border border-white/30 dark:border-white/8 px-6 py-5 mb-4 flex items-start gap-3">
+          <span className="text-lg leading-none mt-0.5">🌱</span>
+          <div>
+            <p className="text-sm font-bold text-[#2F3E46]/70 dark:text-[#EAE0D0]/70 mb-1">Nothing planted here yet.</p>
+            <p className="text-xs text-[#2F3E46]/40 dark:text-[#A89880]/60 leading-relaxed">
+              Try April 2026 to explore what's growing in Houston.
+            </p>
+          </div>
+        </div>
+      )}
       <div className="overflow-hidden rounded-2xl md:rounded-[2rem] border border-white/30 dark:border-white/10 bg-white/30 dark:bg-[#18232A] backdrop-blur-sm shadow-sm dark:shadow-black/40">
 
         {/* Day-of-week header */}
@@ -260,7 +293,7 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
                   !isLastRow ? "border-b border-black/5 dark:border-white/8" : "",
                   !isLastCol ? "border-r border-black/5 dark:border-white/8" : "",
                   day && vibe ? VIBE_CELL_BG[vibe] : day ? "bg-white/10 dark:bg-white/[0.03]" : "bg-black/[0.02] dark:bg-black/20",
-                  day ? "cursor-pointer md:cursor-default" : "",
+                  day && dayEvents.length > 0 ? "cursor-pointer" : "",
                 ].join(" ")}
                 onClick={() => {
                   if (!day) return
@@ -317,12 +350,15 @@ export function CalendarGrid({ year, month, onEventClick, events = [] }: Calenda
                             <TooltipTrigger asChild>
                               <button
                                 onClick={e => { e.stopPropagation(); onEventClick(event) }}
-                                className="w-full text-left rounded-lg px-2.5 py-2 transition-all duration-150 hover:brightness-95 active:scale-[0.98]"
+                                className="group w-full text-left rounded-lg px-2.5 py-2 transition-all duration-150 hover:shadow-md hover:-translate-y-px active:scale-[0.98] active:translate-y-0"
                                 style={{ backgroundColor: chip.bg }}
                               >
-                                <span className="block text-[11px] font-bold leading-snug line-clamp-2" style={{ color: chip.text }}>
-                                  {event.title}
-                                </span>
+                                <div className="flex items-start justify-between gap-0.5">
+                                  <span className="block text-[11px] font-bold leading-snug line-clamp-2" style={{ color: chip.text }}>
+                                    {event.title}
+                                  </span>
+                                  <ChevronRight className="w-2.5 h-2.5 flex-shrink-0 mt-0.5 opacity-0 group-hover:opacity-50 transition-opacity" style={{ color: chip.text }} />
+                                </div>
                               </button>
                             </TooltipTrigger>
                             {tip && (

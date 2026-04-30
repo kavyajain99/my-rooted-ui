@@ -5,7 +5,9 @@ export const dynamic = 'force-dynamic'
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { createBrowserClient } from '@supabase/ssr'
-import { MapPin, User, Sparkles, MessageSquare, Pencil, Check, ChevronLeft, ChevronRight, SearchX, Settings } from "lucide-react"
+import { MapPin, User, Sparkles, MessageSquare, Pencil, Check, SearchX, Settings, UserPlus } from "lucide-react"
+import { toast } from "sonner"
+import { Toaster } from "@/components/ui/sonner"
 import { AnimatePresence } from "framer-motion"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { MoodInput } from "@/components/mood-input"
@@ -55,7 +57,7 @@ function UserSignalCard({
   return (
     <div className="bg-white/40 dark:bg-[#1F2E36] backdrop-blur-md rounded-2xl p-6 border border-white/20 dark:border-white/10 shadow-sm dark:shadow-black/30 space-y-5">
       <div className="flex items-center justify-between">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#A89880]">Your Signal</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#A89880]">About You</p>
         <a href="/onboarding" className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#2F3E46]/40 dark:text-[#A89880]/60 hover:text-[#2F3E46] dark:hover:text-[#EAE0D0] transition-colors border-b border-transparent hover:border-[#2F3E46]/30">
           Edit
         </a>
@@ -133,6 +135,92 @@ function UserSignalCard({
   )
 }
 
+const MONTH_NAMES_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+
+// ── Attendance stats card ─────────────────────────────────────────
+function AttendanceStatsCard({
+  savedEvents,
+  displayMonth,
+  displayYear,
+}: {
+  savedEvents: any[]
+  displayMonth: number
+  displayYear: number
+}) {
+  const attendedThisMonth = savedEvents.filter(e => {
+    if (e._attendanceStatus !== "attended") return false
+    const src = e.event_date || e.raw_json?.event_date
+    if (!src) return false
+    const d = new Date(src)
+    return d.getUTCMonth() === displayMonth && d.getUTCFullYear() === displayYear
+  }).length
+
+  const attendedTotal = savedEvents.filter(e => e._attendanceStatus === "attended").length
+
+  if (attendedTotal === 0) return null
+
+  const label = attendedThisMonth > 0
+    ? `${MONTH_NAMES_SHORT[displayMonth]} ${displayYear}`
+    : "All time"
+  const count = attendedThisMonth > 0 ? attendedThisMonth : attendedTotal
+
+  const messages = [
+    "You've been showing up.",
+    "That's how roots grow.",
+    "One event at a time.",
+    "Keep going.",
+  ]
+  const message = messages[count % messages.length]
+
+  return (
+    <div className="bg-[#2C6B5F]/8 dark:bg-[#2C6B5F]/15 backdrop-blur-md rounded-2xl p-6 border border-[#2C6B5F]/15 dark:border-[#2C6B5F]/25 shadow-sm space-y-1">
+      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2C6B5F]/60 dark:text-[#7AAF9F]">
+        {label} · Attended
+      </p>
+      <p className="font-display text-5xl text-[#2C6B5F] dark:text-[#7AAF9F] leading-none">
+        {count}
+      </p>
+      <p className="text-xs font-semibold text-[#2C6B5F]/55 dark:text-[#7AAF9F]/70 pt-1">
+        {message}
+      </p>
+    </div>
+  )
+}
+
+// ── Invite card ──────────────────────────────────────────────────
+function InviteCard() {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(window.location.origin).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  return (
+    <div className="bg-white/40 dark:bg-[#1F2E36] backdrop-blur-md rounded-2xl p-6 border border-white/20 dark:border-white/10 shadow-sm dark:shadow-black/30 space-y-4">
+      <div className="flex items-center gap-2">
+        <UserPlus className="w-3 h-3 text-[#2C6B5F]" />
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#A89880]">Bring a Friend</p>
+      </div>
+      <p className="text-xs text-[#2F3E46]/50 dark:text-[#A89880]/70 leading-relaxed">
+        Know someone who should be here? Send them the link. Community apps grow one good invite at a time.
+      </p>
+      <button
+        onClick={handleCopy}
+        className="w-full flex items-center justify-center gap-2 rounded-xl py-3 font-sans text-xs font-bold uppercase tracking-[0.2em] border-2 transition-all"
+        style={copied
+          ? { backgroundColor: "#2C6B5F", borderColor: "#2C6B5F", color: "white" }
+          : { borderColor: "rgba(44,107,95,0.25)", color: "rgba(44,107,95,0.8)" }}
+      >
+        <UserPlus className="w-3.5 h-3.5" />
+        {copied ? "Link Copied!" : "Copy Invite Link"}
+      </button>
+    </div>
+  )
+}
+
 // ── Main page ─────────────────────────────────────────────────────
 export default function CalendarPage() {
   const [events, setEvents]               = useState<any[]>([])
@@ -192,10 +280,14 @@ export default function CalendarPage() {
       // 3. Load saved events (Your Leaves)
       const { data: savedData } = await supabase
         .from("saved_events")
-        .select("event_id, events(*)")
+        .select("id, event_id, attendance_status, events(*)")
         .eq("user_id", user.id)
       if (savedData) {
-        setSavedEvents(savedData.map((s: any) => s.events).filter(Boolean))
+        setSavedEvents(
+          savedData
+            .filter((s: any) => s.events)
+            .map((s: any) => ({ ...s.events, _savedId: s.id, _attendanceStatus: s.attendance_status }))
+        )
       }
     })
   }, [])
@@ -225,11 +317,16 @@ export default function CalendarPage() {
   const handleSaveToggle = async (event: any, saved: boolean) => {
     if (!currentUserId || !event?.id) return
     if (saved) {
-      await supabase.from("saved_events").upsert(
+      const { data: upserted } = await supabase.from("saved_events").upsert(
         { user_id: currentUserId, event_id: event.id },
         { onConflict: "user_id,event_id" }
+      ).select("id").single()
+      setSavedEvents(prev =>
+        prev.some(e => e.id === event.id)
+          ? prev
+          : [...prev, { ...event, _savedId: upserted?.id, _attendanceStatus: null }]
       )
-      setSavedEvents(prev => prev.some(e => e.id === event.id) ? prev : [...prev, event])
+      toast.success("Planted! Find it in Your Leaves →")
     } else {
       await supabase.from("saved_events").delete()
         .eq("user_id", currentUserId).eq("event_id", event.id)
@@ -242,6 +339,11 @@ export default function CalendarPage() {
     await supabase.from("saved_events").delete()
       .eq("user_id", currentUserId).eq("event_id", eventId)
     setSavedEvents(prev => prev.filter(e => e.id !== eventId))
+  }
+
+  const handleAttendance = async (savedId: string, status: "attended" | "missed") => {
+    await supabase.from("saved_events").update({ attendance_status: status }).eq("id", savedId)
+    setSavedEvents(prev => prev.map(e => e._savedId === savedId ? { ...e, _attendanceStatus: status } : e))
   }
 
   const handleIntentChange = async (newIntent: string) => {
@@ -317,21 +419,13 @@ export default function CalendarPage() {
                   </div>
                 )}
 
-                {/* Month navigation */}
-                <div className="flex items-center justify-end gap-2">
-                  <button onClick={prevMonth} className="p-1.5 rounded-lg hover:bg-black/5 transition-colors text-[#2F3E46]/40 hover:text-[#2F3E46]">
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <button onClick={nextMonth} className="p-1.5 rounded-lg hover:bg-black/5 transition-colors text-[#2F3E46]/40 hover:text-[#2F3E46]">
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-
                 <CalendarGrid
                   year={displayYear}
                   month={displayMonth}
                   events={events}
                   onEventClick={setSelectedEvent}
+                  onPrev={prevMonth}
+                  onNext={nextMonth}
                 />
               </div>
             </div>
@@ -339,12 +433,15 @@ export default function CalendarPage() {
             {/* Sidebar — below calendar on mobile, left on desktop */}
             <div className="lg:col-span-3 order-2 lg:order-1 space-y-6">
               {profile && <UserSignalCard profile={profile} onIntentChange={handleIntentChange} />}
+              <AttendanceStatsCard savedEvents={savedEvents} displayMonth={displayMonth} displayYear={displayYear} />
               <MoodInput onResultsFound={handleResults} onSearchStart={handleSearchStart} profile={profile} />
               <SavedLeavesCard
                 savedEvents={savedEvents}
                 onUnsave={handleUnsave}
                 onEventClick={setSelectedEvent}
+                onAttendance={handleAttendance}
               />
+              <InviteCard />
             </div>
 
           </div>
@@ -361,6 +458,7 @@ export default function CalendarPage() {
           )}
         </AnimatePresence>
 
+        <Toaster position="bottom-center" />
         <ProfilePanel
           open={profileOpen}
           onClose={() => setProfileOpen(false)}

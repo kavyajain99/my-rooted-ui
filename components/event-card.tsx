@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { X, MapPin, Calendar, Clock, Sparkles, CreditCard, ShoppingBag, Info, CalendarPlus, ChevronDown, Bookmark } from "lucide-react"
+import { X, MapPin, Calendar, Clock, Sparkles, CreditCard, ShoppingBag, Info, CalendarPlus, ChevronDown, Bookmark, Share2 } from "lucide-react"
 
 function buildCalendarDates(eventDate: string, eventTime: string) {
   const baseDate = new Date(eventDate)
@@ -148,12 +148,21 @@ interface EventCardProps {
 export function EventCard({ event, onClose, isSaved = false, onSaveToggle }: EventCardProps) {
   const [calOpen, setCalOpen] = useState(false)
   const [saved, setSaved] = useState(isSaved)
+  const [copied, setCopied] = useState(false)
   if (!event) return null
 
   const handleSaveToggle = () => {
     const next = !saved
     setSaved(next)
     onSaveToggle?.(next)
+  }
+
+  const handleShare = () => {
+    const url = `${window.location.origin}?event=${event.id}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
   }
 
   // Use the rich JSON if it exists, otherwise fallback to top level
@@ -278,6 +287,15 @@ export function EventCard({ event, onClose, isSaved = false, onSaveToggle }: Eve
             >
               <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-white stroke-white" : ""}`} />
               {saved ? "Planted in Your Grove" : "Plant This"}
+            </button>
+
+            {/* Share link */}
+            <button
+              onClick={handleShare}
+              className="flex w-full items-center justify-center gap-2 rounded-2xl py-3 font-sans text-xs font-bold uppercase tracking-[0.2em] border border-[#2F3E46]/10 text-[#2F3E46]/40 hover:text-[#2F3E46]/70 hover:border-[#2F3E46]/20 transition-all"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              {copied ? "Link Copied!" : "Share Event"}
             </button>
 
             {/* Add to Calendar */}

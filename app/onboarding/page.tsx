@@ -132,7 +132,7 @@ function TraitCard({
 }
 
 // ── 3-step progress indicator ─────────────────────────────────────
-const STEPS = ["Your Identity", "Your Signal", "The Vault"]
+const STEPS = ["Your Identity", "Your Roots", "Your Story"]
 
 function StepProgress({ step }: { step: number }) {
   // step 1 = first node active, step 2 = first two active

@@ -278,7 +278,7 @@ export default function LandingPage() {
             custom={4}
             className="mt-6 text-center font-sans text-xs text-[#2F3E46]/35 dark:text-[#EAE0D0]/40"
           >
-            Create a profile to see full details, RSVP, and find your people.{" "}
+            These are real events. Join to see dates, locations, and who else is going.{" "}
             <Link href="/login" className="text-[#2C6B5F]/70 hover:text-[#2C6B5F] border-b border-[#2C6B5F]/30 transition-colors">
               Join Rooted
             </Link>
@@ -502,7 +502,7 @@ export default function LandingPage() {
             className="mt-14 text-center flex flex-col items-center gap-4"
           >
             <p className="font-display text-3xl md:text-4xl text-[#2F3E46] dark:text-[#EAE0D0] tracking-tight">
-              Are you ready to branch out with Rooted?
+              The people who get it are already here.
             </p>
             <Link href="/login" className={CTA_CLASS}>
               Join Rooted
