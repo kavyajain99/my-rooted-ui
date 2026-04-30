@@ -62,7 +62,7 @@ export function MoodInput({ onResultsFound, onSearchStart, profile }: MoodInputP
           value={mood}
           onChange={e => setMood(e.target.value)}
           placeholder={"Try: \"I want to feel more connected to people who are into slow living and being outside\" or \"something low-key where I might actually talk to someone\""}
-          rows={4}
+          rows={6}
           className="w-full rounded-xl bg-white/60 dark:bg-[#263540] border border-white/40 dark:border-white/10 px-4 py-3 text-sm text-[#2F3E46] dark:text-[#EAE0D0] placeholder:text-[#2F3E46]/25 dark:placeholder:text-[#68605A] focus:outline-none focus:ring-2 focus:ring-[#2F3E46]/20 dark:focus:ring-[#C4785C]/30 resize-none transition-all"
         />
         <p className="text-[10px] text-[#2F3E46]/30 dark:text-[#68605A] leading-relaxed">
@@ -73,7 +73,7 @@ export function MoodInput({ onResultsFound, onSearchStart, profile }: MoodInputP
       <Button
         onClick={handleDiscover}
         disabled={isListening || !mood.trim()}
-        className="w-full bg-[#2F3E46] dark:bg-[#C4785C] text-[#F4F1EA] py-6 rounded-full font-sans text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#3d4f59] dark:hover:bg-[#D4896C] transition-all shadow-lg disabled:opacity-40"
+        className="w-full bg-[#2F3E46] dark:bg-[#C4785C] text-[#F4F1EA] py-6 rounded-full font-sans text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#3d4f59] dark:hover:bg-[#D4896C] transition-all shadow-lg disabled:opacity-60"
       >
         {isListening ? (
           <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Scanning the Vault…</>
