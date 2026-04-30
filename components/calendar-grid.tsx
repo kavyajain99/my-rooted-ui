@@ -253,7 +253,7 @@ export function CalendarGrid({ year, month, onEventClick, events = [], onPrev, o
           <div>
             <p className="text-sm font-bold text-[#2F3E46]/70 dark:text-[#EAE0D0]/70 mb-1">Nothing planted here yet.</p>
             <p className="text-xs text-[#2F3E46]/40 dark:text-[#A89880]/60 leading-relaxed">
-              Try April 2026 to explore what's growing in Houston.
+              Try May 2026 to explore what's growing in Houston.
             </p>
           </div>
         </div>

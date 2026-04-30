@@ -231,9 +231,9 @@ export default function CalendarPage() {
   const [profileOpen, setProfileOpen]     = useState(false)
   const [savedEvents, setSavedEvents]     = useState<any[]>([])
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
-  // Default to April 2026 where our seed data lives
+  // Default to May 2026
   const [displayYear, setDisplayYear]     = useState(2026)
-  const [displayMonth, setDisplayMonth]   = useState(3) // April = 3
+  const [displayMonth, setDisplayMonth]   = useState(4) // May = 4
 
   const router = useRouter()
   const supabase = createBrowserClient(
