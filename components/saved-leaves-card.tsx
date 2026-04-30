@@ -15,12 +15,12 @@ export function SavedLeavesCard({ savedEvents, onUnsave, onEventClick, onAttenda
   return (
     <div className="bg-white/40 dark:bg-[#1F2E36] backdrop-blur-md rounded-2xl p-6 border border-white/20 dark:border-white/10 shadow-sm dark:shadow-black/30 space-y-4">
       <div className="flex items-center gap-2">
-        <Leaf className="w-3 h-3 text-[#2C6B5F]" />
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#A89880]">Your Leaves</p>
+        <Leaf className="w-3 h-3 text-[#2C6B5F] dark:text-[#7AAF9F]" />
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#D4C8B8]">Your Leaves</p>
       </div>
 
       {savedEvents.length === 0 ? (
-        <p className="text-xs text-[#2F3E46]/40 dark:text-[#A89880]/60 italic leading-relaxed">
+        <p className="text-xs text-[#2F3E46]/40 dark:text-[#C4B8A8] italic leading-relaxed">
           No events planted yet. Find something you love and tap "Plant This."
         </p>
       ) : (
