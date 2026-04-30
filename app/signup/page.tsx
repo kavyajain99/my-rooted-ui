@@ -93,6 +93,25 @@ export default function SignUpPage() {
                   className={inputClass}
                   required
                 />
+                {/* Whimsical annotation */}
+                <div className="flex items-start gap-2 pt-0.5 pl-2">
+                  <svg
+                    width="30" height="36" viewBox="0 0 30 36"
+                    fill="none" className="flex-shrink-0 mt-0.5 opacity-40"
+                  >
+                    <path
+                      d="M4 34 C5 28, 1 24, 5 19 C9 14, 16 17, 18 12 C20 7, 21 4, 24 1"
+                      stroke="#2C6B5F" strokeWidth="1.5" strokeLinecap="round"
+                    />
+                    <path
+                      d="M24 1 L18 5 M24 1 L27 7"
+                      stroke="#2C6B5F" strokeWidth="1.5" strokeLinecap="round"
+                    />
+                  </svg>
+                  <p className="font-display italic text-[12px] text-[#2C6B5F]/50 leading-snug -rotate-1 select-none">
+                    we'll send your weekly<br />Houston events here —<br />nothing else, promise 🌱
+                  </p>
+                </div>
               </div>
 
               <div className="space-y-2">
