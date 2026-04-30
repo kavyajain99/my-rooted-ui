@@ -38,15 +38,16 @@ export async function POST(req: Request) {
     if (error) throw error
 
     const FAITH_KEYWORDS = /\b(church|chapel|cathedral|mosque|synagogue|temple|parish|diocese|ministry|sermon|worship|prayer|bible|quran|torah|sabbath|mass|baptis|confirmati|communion|holy spirit|god's|christ|jesus|allah|yahweh|religious service|faith community|congregation|revival|evangel)\b/i
+    const GENERIC_TITLES = new Set(["unnamed event", "community event", "social gathering", "monthly meetup", "untitled event", "event"])
 
     const wantsFaith = FAITH_KEYWORDS.test(intentText)
 
-    const filtered = wantsFaith
-      ? events
-      : (events ?? []).filter((e: any) => {
-          const text = `${e.title ?? ""} ${e.vibe_check ?? ""}`
-          return !FAITH_KEYWORDS.test(text)
-        })
+    const filtered = (events ?? []).filter((e: any) => {
+      if (!e.title || GENERIC_TITLES.has(e.title.trim().toLowerCase())) return false
+      if (wantsFaith) return true
+      const text = `${e.title ?? ""} ${e.vibe_check ?? ""}`
+      return !FAITH_KEYWORDS.test(text)
+    })
 
     return NextResponse.json({ events: filtered })
   } catch (error: any) {
