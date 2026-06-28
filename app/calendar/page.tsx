@@ -209,18 +209,20 @@ function InviteCard() {
   return (
     <div className="bg-white/40 dark:bg-[#1F2E36] backdrop-blur-md rounded-2xl p-6 border border-white/20 dark:border-white/10 shadow-sm dark:shadow-black/30 space-y-4">
       <div className="flex items-center gap-2">
-        <UserPlus className="w-3 h-3 text-[#2C6B5F]" />
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/40 dark:text-[#A89880]">Bring a Friend</p>
+        <UserPlus className="w-3 h-3 text-[#2C6B5F] dark:text-[#7AAF9F]" />
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50 dark:text-[#C8B8A0]">Bring a Friend</p>
       </div>
-      <p className="text-xs text-[#2F3E46]/50 dark:text-[#A89880]/70 leading-relaxed">
+      <p className="text-xs text-[#2F3E46]/55 dark:text-[#A89880] leading-relaxed">
         Know someone who should be here? Send them the link. Community apps grow one good invite at a time.
       </p>
       <button
         onClick={handleCopy}
-        className="w-full flex items-center justify-center gap-2 rounded-xl py-3 font-sans text-xs font-bold uppercase tracking-[0.2em] border-2 transition-all"
-        style={copied
-          ? { backgroundColor: "#2C6B5F", borderColor: "#2C6B5F", color: "white" }
-          : { borderColor: "rgba(44,107,95,0.25)", color: "rgba(44,107,95,0.8)" }}
+        className={[
+          "w-full flex items-center justify-center gap-2 rounded-xl py-3 font-sans text-xs font-bold uppercase tracking-[0.2em] border-2 transition-all",
+          copied
+            ? "bg-[#2C6B5F] border-[#2C6B5F] text-white"
+            : "border-[#2C6B5F]/30 dark:border-[#7AAF9F]/50 text-[#2C6B5F]/80 dark:text-[#7AAF9F] hover:border-[#2C6B5F]/60 dark:hover:border-[#7AAF9F]/80"
+        ].join(" ")}
       >
         <UserPlus className="w-3.5 h-3.5" />
         {copied ? "Link Copied!" : "Copy Invite Link"}
