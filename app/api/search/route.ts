@@ -36,29 +36,35 @@ export async function POST(req: Request) {
     const wantsFaith = FAITH_KEYWORDS.test(intentText)
     const wantsQueer = QUEER_INTENT_KEYWORDS.test(intentText)
 
-    // Raise the similarity threshold for queer queries so hallucinated vibe_checks
-    // (where GPT added "LGBTQ+" to a generic event) don't clear the bar.
-    const match_threshold = wantsQueer ? 0.32 : 0.22
+    // Higher threshold for queer queries (prevent hallucinated vibe_checks from clearing the bar).
+    // Raised baseline from 0.22 → 0.27 to cut false positives (pool parties for gardening, etc.)
+    const match_threshold = wantsQueer ? 0.32 : 0.27
 
-    // 2. Call the RPC match function
+    // Pull more candidates so the filter has a meaningful pool to work with
     const { data: events, error } = await supabase.rpc('match_events', {
       query_embedding: embedding,
       match_threshold,
-      match_count: 20,
+      match_count: 40,
     })
 
     if (error) throw error
 
     const filtered = (events ?? []).filter((e: any) => {
       if (!e.title || GENERIC_TITLES.has(e.title.trim().toLowerCase())) return false
-      const text = `${e.title ?? ""} ${e.vibe_check ?? ""}`
-      if (!wantsFaith && FAITH_KEYWORDS.test(text)) return false
-      // For queer searches, require that queer keywords appear in the TITLE,
-      // not just the vibe_check (which the AI sometimes hallucinates).
+      const titleAndVibe = `${e.title ?? ""} ${e.vibe_check ?? ""}`
+      if (!wantsFaith && FAITH_KEYWORDS.test(titleAndVibe)) return false
+
       if (wantsQueer) {
+        // For queer searches: require queer keywords in TITLE (not just vibe_check,
+        // which the AI sometimes hallucinates)
         const titleText = (e.title ?? "").toLowerCase()
         return QUEER_EVENT_KEYWORDS.test(titleText) || QUEER_INTENT_KEYWORDS.test(titleText)
+      } else {
+        // For non-queer searches: exclude events explicitly branded as LGBTQ+/queer
+        // in title OR vibe_check — they'll appear when users actually search for them
+        if (QUEER_EVENT_KEYWORDS.test(titleAndVibe)) return false
       }
+
       return true
     }).slice(0, 10)
 
