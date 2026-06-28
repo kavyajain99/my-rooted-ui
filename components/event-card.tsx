@@ -280,13 +280,20 @@ export function EventCard({ event, onClose, isSaved = false, onSaveToggle }: Eve
             {/* Plant This — save to Your Leaves */}
             <button
               onClick={handleSaveToggle}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 font-sans text-xs font-bold uppercase tracking-[0.2em] border-2 transition-all"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 font-sans border-2 transition-all"
               style={saved
                 ? { backgroundColor: energy.color || '#2C6B5F', borderColor: energy.color || '#2C6B5F', color: 'white' }
                 : { borderColor: 'rgba(47,62,70,0.15)', color: 'rgba(47,62,70,0.6)' }}
             >
-              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-white stroke-white" : ""}`} />
-              {saved ? "Planted in Your Grove" : "Plant This"}
+              <Bookmark className={`w-3.5 h-3.5 flex-shrink-0 ${saved ? "fill-white stroke-white" : ""}`} />
+              <div className="flex flex-col items-start">
+                <span className="text-xs font-bold uppercase tracking-[0.2em]">
+                  {saved ? "Planted" : "Plant This"}
+                </span>
+                <span className="text-[9px] font-normal normal-case tracking-normal opacity-70">
+                  {saved ? "Saved to your leaves ✓" : "Save to your leaves"}
+                </span>
+              </div>
             </button>
 
             {/* Share link */}

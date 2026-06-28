@@ -28,26 +28,39 @@ export async function POST(req: Request) {
 
     const [{ embedding }] = embeddingResponse.data
 
+    const FAITH_KEYWORDS = /\b(church|chapel|cathedral|mosque|synagogue|temple|parish|diocese|ministry|sermon|worship|prayer|bible|quran|torah|sabbath|mass|baptis|confirmati|communion|holy spirit|god's|christ|jesus|allah|yahweh|religious service|faith community|congregation|revival|evangel)\b/i
+    const QUEER_INTENT_KEYWORDS = /\b(lgbtq\+?|lgbt|queer|lesbian|sapphic|gay\b|wlw|bisexual|trans\b|nonbinary|non-binary|dyke|drag queen|drag night|pride)\b/i
+    const QUEER_EVENT_KEYWORDS = /\b(lgbtq\+?|lgbt|queer|lesbian|sapphic|gay bar|wlw|bisexual|trans\b|nonbinary|dyke|drag|pride|queer-friendly|queer women|queer community|queer space)\b/i
+    const GENERIC_TITLES = new Set(["unnamed event", "community event", "social gathering", "monthly meetup", "untitled event", "event"])
+
+    const wantsFaith = FAITH_KEYWORDS.test(intentText)
+    const wantsQueer = QUEER_INTENT_KEYWORDS.test(intentText)
+
+    // Raise the similarity threshold for queer queries so hallucinated vibe_checks
+    // (where GPT added "LGBTQ+" to a generic event) don't clear the bar.
+    const match_threshold = wantsQueer ? 0.32 : 0.22
+
     // 2. Call the RPC match function
     const { data: events, error } = await supabase.rpc('match_events', {
       query_embedding: embedding,
-      match_threshold: 0.22, // Slightly lowered to allow for more nuanced persona matches
-      match_count: 10,
+      match_threshold,
+      match_count: 20,
     })
 
     if (error) throw error
 
-    const FAITH_KEYWORDS = /\b(church|chapel|cathedral|mosque|synagogue|temple|parish|diocese|ministry|sermon|worship|prayer|bible|quran|torah|sabbath|mass|baptis|confirmati|communion|holy spirit|god's|christ|jesus|allah|yahweh|religious service|faith community|congregation|revival|evangel)\b/i
-    const GENERIC_TITLES = new Set(["unnamed event", "community event", "social gathering", "monthly meetup", "untitled event", "event"])
-
-    const wantsFaith = FAITH_KEYWORDS.test(intentText)
-
     const filtered = (events ?? []).filter((e: any) => {
       if (!e.title || GENERIC_TITLES.has(e.title.trim().toLowerCase())) return false
-      if (wantsFaith) return true
       const text = `${e.title ?? ""} ${e.vibe_check ?? ""}`
-      return !FAITH_KEYWORDS.test(text)
-    })
+      if (!wantsFaith && FAITH_KEYWORDS.test(text)) return false
+      // For queer searches, require that queer keywords appear in the TITLE,
+      // not just the vibe_check (which the AI sometimes hallucinates).
+      if (wantsQueer) {
+        const titleText = (e.title ?? "").toLowerCase()
+        return QUEER_EVENT_KEYWORDS.test(titleText) || QUEER_INTENT_KEYWORDS.test(titleText)
+      }
+      return true
+    }).slice(0, 10)
 
     return NextResponse.json({ events: filtered })
   } catch (error: any) {

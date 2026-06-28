@@ -49,6 +49,14 @@ const TRAIT_OPTIONS = [
   { emoji: "🕯️", label: "Ritualist", color: "#6D5C7A", description: "Builds meaning through ceremony, habit, and intentional practice." },
   { emoji: "🎵", label: "Tuned",     color: "#B36A3A", description: "Live music seeker, record collector, sound as a love language." },
   { emoji: "🧘", label: "Embodied",  color: "#7A8B7C", description: "Movement-minded; yoga, dance, sport, or just walks that clear the head." },
+  { emoji: "🌈", label: "Queer",     color: "#7C5C8B", description: "LGBTQ+ community, queer spaces, and identity-affirming events." },
+  { emoji: "⚡", label: "Athletic",  color: "#8B4A3A", description: "Competitive sports, fitness community, and outdoor endurance." },
+  { emoji: "🍜", label: "Foodie",    color: "#8B6040", description: "Restaurant-hopping, culinary adventures, and a perfect shared meal." },
+  { emoji: "📍", label: "Newcomer",  color: "#3A6B6B", description: "New to Houston and actively building community from scratch." },
+  { emoji: "🎨", label: "Creative",  color: "#6D4F7A", description: "Visual artists, designers, performers — making is how you think." },
+  { emoji: "🌙", label: "Nightlife", color: "#3A3A5C", description: "Live music, dancing, and the kind of connection that happens after dark." },
+  { emoji: "🗳️", label: "Activist",  color: "#5C3A2F", description: "Social justice, mutual aid, and community organizing — here to build." },
+  { emoji: "🎲", label: "Gamer",     color: "#3A4A5C", description: "Board games, tabletop RPGs, and nerd culture community nights." },
 ]
 
 // ── Reusable chip (demographics) ─────────────────────────────────
@@ -222,10 +230,12 @@ export default function OnboardingPage() {
   }
 
   const handleFinish = () => {
-    const autoIntent = traits.length > 0
-      ? `I'm drawn to ${traits.join(", ").toLowerCase()} experiences and want to find community in Houston.`
-      : "Open to discovery"
-    save({ gender, age, neighborhood, traits, intent: autoIntent })
+    const finalIntent = intent.trim() || (
+      traits.length > 0
+        ? `I'm drawn to ${traits.join(", ").toLowerCase()} experiences and want to find community in Houston.`
+        : "Open to discovery"
+    )
+    save({ gender, age, neighborhood, traits, intent: finalIntent })
   }
 
   const handleSkip = () =>
@@ -348,9 +358,58 @@ export default function OnboardingPage() {
                       <ArrowLeft className="w-4 h-4" /> Back
                     </button>
                     <button
-                      onClick={handleFinish}
+                      onClick={() => setStep(3)}
                       disabled={!step2Complete}
                       className="flex flex-1 items-center justify-center gap-2 rounded-2xl py-5 font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#F4F1EA] shadow-lg transition-all disabled:opacity-30"
+                      style={{ backgroundColor: SAGE }}
+                    >
+                      Next <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
+              {step === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -24 }}
+                  transition={{ duration: 0.22, ease: "easeInOut" }}
+                  className="space-y-8"
+                >
+                  <div className="space-y-1">
+                    <h2 className="font-display text-2xl md:text-3xl text-[#2F3E46] leading-tight">Your Story.</h2>
+                    <p className="text-sm text-[#2F3E46]/60 font-medium">Tell us where you are right now. This is how we find your people.</p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2F3E46]/50">
+                      What's bringing you here? <span className="font-normal opacity-60">(optional)</span>
+                    </label>
+                    <textarea
+                      value={intent}
+                      onChange={e => setIntent(e.target.value)}
+                      rows={6}
+                      placeholder={"I moved here six months ago and still don't know where my people are. I'm looking for a place to slow down and actually talk to someone — not networking, just real connection over something I care about."}
+                      className="w-full rounded-2xl bg-white/60 border border-white/40 px-4 py-3.5 text-sm text-[#2F3E46] placeholder:text-[#2F3E46]/25 focus:outline-none focus:ring-2 resize-none leading-relaxed"
+                      style={{ '--tw-ring-color': SAGE_RING } as any}
+                    />
+                    <p className="text-[10px] text-[#2F3E46]/30 leading-relaxed">
+                      The more real you are, the better we match. What's missing? What would make Friday feel less quiet?
+                    </p>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setStep(2)}
+                      className="flex items-center gap-1 rounded-2xl border border-[#2F3E46]/20 px-6 py-5 font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#2F3E46]/60 transition-all hover:border-[#2F3E46]/40 hover:text-[#2F3E46]"
+                    >
+                      <ArrowLeft className="w-4 h-4" /> Back
+                    </button>
+                    <button
+                      onClick={handleFinish}
+                      className="flex flex-1 items-center justify-center gap-2 rounded-2xl py-5 font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#F4F1EA] shadow-lg transition-all"
                       style={{ backgroundColor: SAGE }}
                     >
                       Enter the Vault <ArrowRight className="w-4 h-4" />

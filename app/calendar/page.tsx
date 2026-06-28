@@ -39,6 +39,14 @@ const TRAIT_COLORS: Record<string, string> = {
   Ritualist: "#6D5C7A",
   Tuned:     "#B36A3A",
   Embodied:  "#7A8B7C",
+  Queer:     "#7C5C8B",
+  Athletic:  "#8B4A3A",
+  Foodie:    "#8B6040",
+  Newcomer:  "#3A6B6B",
+  Creative:  "#6D4F7A",
+  Nightlife: "#3A3A5C",
+  Activist:  "#5C3A2F",
+  Gamer:     "#3A4A5C",
 }
 
 // ── Editable "Your Signal" sidebar ───────────────────────────────
@@ -231,9 +239,9 @@ export default function CalendarPage() {
   const [profileOpen, setProfileOpen]     = useState(false)
   const [savedEvents, setSavedEvents]     = useState<any[]>([])
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
-  // Default to May 2026
+  // Default to June 2026
   const [displayYear, setDisplayYear]     = useState(2026)
-  const [displayMonth, setDisplayMonth]   = useState(4) // May = 4
+  const [displayMonth, setDisplayMonth]   = useState(5) // June = 5
 
   const router = useRouter()
   const supabase = createBrowserClient(
@@ -426,6 +434,7 @@ export default function CalendarPage() {
                   onEventClick={setSelectedEvent}
                   onPrev={prevMonth}
                   onNext={nextMonth}
+                  savedEventIds={new Set(savedEvents.map(e => e.id))}
                 />
               </div>
             </div>

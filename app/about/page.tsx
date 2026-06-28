@@ -15,7 +15,7 @@ export default function AboutPage() {
         <div className="relative z-20 max-w-3xl mx-auto px-6 pt-12">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-sans uppercase tracking-widest opacity-60 hover:opacity-100 transition-all"
+            className="inline-flex items-center gap-2 text-sm font-sans uppercase tracking-widest text-[#2F3E46]/60 dark:text-[#EAE0D0]/60 hover:text-[#2F3E46] dark:hover:text-[#EAE0D0] transition-all"
           >
             <ArrowLeft size={16} /> Back to Home
           </Link>
@@ -24,23 +24,23 @@ export default function AboutPage() {
         <article className="relative z-10 max-w-2xl mx-auto px-6 pt-20 pb-32">
           {/* Header */}
           <header className="mb-16">
-            <h1 className="font-display text-5xl md:text-7xl mb-6 text-[#2F3E46]">
+            <h1 className="font-display text-5xl md:text-7xl mb-6 text-[#2F3E46] dark:text-[#EAE0D0]">
               Rooted
             </h1>
-            <p className="text-xl italic font-display text-[#2F3E46]/70">
+            <p className="text-xl italic font-display text-[#2F3E46]/70 dark:text-[#EAE0D0]/80">
               An In-Person Belonging Engine for a Digital World.
             </p>
           </header>
 
           {/* Opening epigraph */}
-          <blockquote className="mb-16 border-l-2 border-[#2C6B5F]/30 pl-6">
-            <p className="font-display italic text-xl md:text-2xl text-[#2F3E46]/60 leading-relaxed">
+          <blockquote className="mb-16 border-l-2 border-[#2C6B5F]/30 dark:border-[#2C6B5F]/50 pl-6">
+            <p className="font-display italic text-xl md:text-2xl text-[#2F3E46]/60 dark:text-[#EAE0D0]/75 leading-relaxed">
               "Home is not just a place, but a feeling, and one you can build."
             </p>
           </blockquote>
 
           {/* The Narrative */}
-          <div className="space-y-8 font-sans text-base md:text-lg leading-relaxed text-[#2F3E46]/90">
+          <div className="space-y-8 font-sans text-base md:text-lg leading-relaxed text-[#2F3E46]/90 dark:text-[#EAE0D0]/85">
             <section className="space-y-6">
               <p>
                 I've grown to dislike being asked where I'm from – because I don't have
@@ -60,7 +60,7 @@ export default function AboutPage() {
 
             {/* The Biological Necessity — new section */}
             <section className="space-y-6 pt-4">
-              <h2 className="font-display text-2xl md:text-3xl text-[#2F3E46]">
+              <h2 className="font-display text-2xl md:text-3xl text-[#2F3E46] dark:text-[#EAE0D0]">
                 The Biological Necessity
               </h2>
               <p>
@@ -81,8 +81,8 @@ export default function AboutPage() {
               </p>
             </section>
 
-            <section className="bg-white/30 backdrop-blur-sm p-8 rounded-2xl border border-white/20 my-12">
-              <h2 className="font-display text-xl md:text-2xl mb-4 italic">The Project</h2>
+            <section className="bg-white/30 dark:bg-white/8 backdrop-blur-sm p-8 rounded-2xl border border-white/20 dark:border-white/12 my-12">
+              <h2 className="font-display text-xl md:text-2xl mb-4 italic text-[#2F3E46] dark:text-[#EAE0D0]">The Project</h2>
               <p>
                 I've tried, I've failed, I've made friends, I've lost them,
                 I've moved across the country and done it again... and again.
@@ -101,7 +101,7 @@ export default function AboutPage() {
                 bare our questions (and sometimes soul) to an unfeeling AI. Though these actions are more efficient,
                 yes, but are they human? Do they fill our need to belong?
               </p>
-              <p className="font-display text-xl md:text-2xl text-center py-8">
+              <p className="font-display text-xl md:text-2xl text-center py-8 text-[#2F3E46] dark:text-[#EAE0D0]/90">
                 "What if this very same tech stack—with a different intention—could help us
                 return to connecting in person?"
               </p>
@@ -120,8 +120,8 @@ export default function AboutPage() {
             </section>
 
             {/* Purpose/Scope Section */}
-            <section className="pt-12 border-t border-[#2F3E46]/10 space-y-6">
-              <h3 className="font-sans font-bold uppercase tracking-tighter text-sm">The Mission</h3>
+            <section className="pt-12 border-t border-[#2F3E46]/10 dark:border-[#EAE0D0]/10 space-y-6">
+              <h3 className="font-sans font-bold uppercase tracking-tighter text-sm text-[#2F3E46] dark:text-[#EAE0D0]">The Mission</h3>
               <p>
                 Rooted is designed by humans and curated by friendly AI to solve the
                 growing epidemic of loneliness. We have more mobility than our ancestors ever
@@ -136,12 +136,12 @@ export default function AboutPage() {
             </section>
           </div>
 
-          <section className="mt-16 pt-8 border-t border-[#2F3E46]/10">
+          <section className="mt-16 pt-8 border-t border-[#2F3E46]/10 dark:border-[#EAE0D0]/10">
             <div className="flex flex-col items-center space-y-4 text-center">
-              <p className="font-display italic text-[#2F3E46]/60">
+              <p className="font-display italic text-[#2F3E46]/60 dark:text-[#EAE0D0]/65">
                 This site was made for you.
               </p>
-              <div className="h-px w-12 bg-[#2F3E46]/20" />
+              <div className="h-px w-12 bg-[#2F3E46]/20 dark:bg-[#EAE0D0]/20" />
 
               {/* Linked Signature */}
               <a
@@ -150,10 +150,10 @@ export default function AboutPage() {
                 rel="noopener noreferrer"
                 className="group flex flex-col items-center"
               >
-                <span className="font-sans text-sm uppercase tracking-[0.3em] text-[#2F3E46] transition-all group-hover:tracking-[0.4em]">
+                <span className="font-sans text-sm uppercase tracking-[0.3em] text-[#2F3E46] dark:text-[#EAE0D0] transition-all group-hover:tracking-[0.4em]">
                   Kavya
                 </span>
-                <span className="h-[1px] w-0 bg-[#2F3E46]/30 transition-all group-hover:w-full mt-1" />
+                <span className="h-[1px] w-0 bg-[#2F3E46]/30 dark:bg-[#EAE0D0]/30 transition-all group-hover:w-full mt-1" />
               </a>
             </div>
           </section>
@@ -161,7 +161,7 @@ export default function AboutPage() {
           <footer className="mt-20 text-center space-y-8">
             <Link
               href="/signup"
-              className="inline-block bg-[#2F3E46] text-[#F4F1EA] px-10 py-4 rounded-full font-sans uppercase tracking-widest text-sm hover:bg-[#3d4f59] transition-all shadow-xl hover:-translate-y-1"
+              className="inline-block bg-[#2C6B5F] dark:bg-[#2C6B5F] text-[#F4F1EA] px-10 py-4 rounded-full font-sans uppercase tracking-widest text-sm hover:bg-[#235a50] dark:hover:bg-[#3a8070] transition-all shadow-xl hover:-translate-y-1"
             >
               Join the Community
             </Link>
@@ -169,7 +169,7 @@ export default function AboutPage() {
             <div className="pt-8">
               <Link
                 href="/login"
-                className="text-xs font-sans uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity"
+                className="text-xs font-sans uppercase tracking-widest text-[#2F3E46]/40 dark:text-[#EAE0D0]/50 hover:text-[#2F3E46] dark:hover:text-[#EAE0D0] transition-all"
               >
                 Already have a key? Login
               </Link>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { Moon, Palette, Activity, Coffee, ChevronLeft, ChevronRight } from "lucide-react"
+import { Moon, Palette, Activity, Coffee, ChevronLeft, ChevronRight, Bookmark } from "lucide-react"
 
 interface CalendarGridProps {
   year: number
@@ -12,6 +12,7 @@ interface CalendarGridProps {
   events: any[]
   onPrev?: () => void
   onNext?: () => void
+  savedEventIds?: Set<string>
 }
 
 const DAYS_OF_WEEK  = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -77,7 +78,7 @@ function getEventsForDay(events: any[], day: number, month: number, year: number
   })
 }
 
-export function CalendarGrid({ year, month, onEventClick, events = [], onPrev, onNext }: CalendarGridProps) {
+export function CalendarGrid({ year, month, onEventClick, events = [], onPrev, onNext, savedEventIds }: CalendarGridProps) {
   const [selectedDay, setSelectedDay] = useState<number | null>(null)
   const [viewMode, setViewMode] = useState<'grid'|'list'>('grid')
   const [isDark, setIsDark] = useState(false)
@@ -230,8 +231,11 @@ export function CalendarGrid({ year, month, onEventClick, events = [], onPrev, o
                           className="w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-white/40 transition-colors active:scale-[0.99]"
                         >
                           <span className="mt-1.5 w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: VIBE_DOT[v] }} />
-                          <div className="min-w-0">
-                            <p className="text-sm font-bold text-[#2F3E46] dark:text-[#E8E3D8] leading-snug">{event.title}</p>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-bold text-[#2F3E46] dark:text-[#E8E3D8] leading-snug flex items-center gap-1.5">
+                              {event.title}
+                              {savedEventIds?.has(event.id) && <Bookmark className="w-3 h-3 fill-current opacity-35 flex-shrink-0" />}
+                            </p>
                             {time && <p className="text-[11px] text-[#2F3E46]/40 dark:text-[#E8E3D8]/40 mt-0.5 font-medium">{time}</p>}
                           </div>
                         </button>
@@ -357,7 +361,9 @@ export function CalendarGrid({ year, month, onEventClick, events = [], onPrev, o
                                   <span className="block text-[11px] font-bold leading-snug line-clamp-2" style={{ color: chip.text }}>
                                     {event.title}
                                   </span>
-                                  <ChevronRight className="w-2.5 h-2.5 flex-shrink-0 mt-0.5 opacity-0 group-hover:opacity-50 transition-opacity" style={{ color: chip.text }} />
+                                  {savedEventIds?.has(event.id)
+                                    ? <Bookmark className="w-2.5 h-2.5 flex-shrink-0 mt-0.5 fill-current opacity-60" style={{ color: chip.text }} />
+                                    : <ChevronRight className="w-2.5 h-2.5 flex-shrink-0 mt-0.5 opacity-0 group-hover:opacity-50 transition-opacity" style={{ color: chip.text }} />}
                                 </div>
                               </button>
                             </TooltipTrigger>
@@ -425,8 +431,11 @@ export function CalendarGrid({ year, month, onEventClick, events = [], onPrev, o
                       className="w-full text-left px-4 py-3.5 flex items-start gap-3 hover:bg-white/10 dark:hover:bg-white/5 transition-colors active:scale-[0.99]"
                     >
                       <span className="mt-1 w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: VIBE_DOT[v] }} />
-                      <div className="min-w-0">
-                        <p className="text-sm font-bold text-[#2F3E46] dark:text-[#EAE0D0] leading-snug">{event.title}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold text-[#2F3E46] dark:text-[#EAE0D0] leading-snug flex items-center gap-1.5">
+                          {event.title}
+                          {savedEventIds?.has(event.id) && <Bookmark className="w-3 h-3 fill-current opacity-35 flex-shrink-0" />}
+                        </p>
                         {time && <p className="text-[11px] text-[#2F3E46]/40 dark:text-[#A89880] mt-0.5 font-medium">{time}</p>}
                         {data.vibe_check && <p className="text-[11px] italic text-[#2F3E46]/40 dark:text-[#A89880] mt-0.5 leading-snug line-clamp-2">{data.vibe_check}</p>}
                       </div>
