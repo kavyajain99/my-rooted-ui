@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Wind, Leaf, Activity, Users, Wifi, MapPin, ArrowRight } from "lucide-react"
+import { Wind, Leaf, Activity, Users, Wifi, MapPin, ArrowRight, Shuffle, BarChart2, type LucideIcon } from "lucide-react"
 import { TopographicBackground } from "@/components/topographic-background"
 import { AppWrapper } from "@/components/app-wrapper"
 import { LandingGallery } from "@/components/landing-gallery"
@@ -95,19 +95,31 @@ const CONTRAST_ROWS = [
 ]
 
 // ── Values ────────────────────────────────────────────────────────────────────
-const VALUES = [
+const VALUES: {
+  Icon: LucideIcon
+  iconBg: string
+  iconColor: string
+  label: string
+  body: string
+}[] = [
   {
-    icon: "🚫",
+    Icon: Shuffle,
+    iconBg: "bg-[#B05C5C]/10 dark:bg-[#B05C5C]/22",
+    iconColor: "text-[#8B3A3A] dark:text-[#E8A8A8]",
     label: "No algorithm curating your world",
     body: "You see what exists, not what keeps you clicking. No ranking, no feed, no black box.",
   },
   {
-    icon: "🚫",
+    Icon: BarChart2,
+    iconBg: "bg-[#B05C5C]/10 dark:bg-[#B05C5C]/22",
+    iconColor: "text-[#8B3A3A] dark:text-[#E8A8A8]",
     label: "No engagement metrics",
     body: "We don't optimize for time-on-app. We optimize for time with people you actually like.",
   },
   {
-    icon: "✅",
+    Icon: Leaf,
+    iconBg: "bg-[#2C6B5F]/10 dark:bg-[#2C6B5F]/22",
+    iconColor: "text-[#2C6B5F] dark:text-[#7AAF9F]",
     label: "Real events, real people, real places",
     body: "Every listing is a physical place in Houston. Hosted by humans. Attended in person.",
   },
@@ -488,7 +500,9 @@ export default function LandingPage() {
                 variants={fadeUp}
                 className={[CARD_BASE, "bg-white/25 border-white/25 dark:bg-white/6 dark:border-white/10 hover:bg-white/40 dark:hover:bg-white/10 hover:shadow-md"].join(" ")}
               >
-                <p className="text-2xl mb-4">{v.icon}</p>
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-5 ${v.iconBg}`}>
+                  <v.Icon className={`w-4 h-4 ${v.iconColor}`} strokeWidth={1.75} />
+                </div>
                 <p className="font-sans text-sm font-bold text-[#2F3E46]/80 dark:text-[#EAE0D0]/90 leading-snug mb-2">{v.label}</p>
                 <p className="font-sans text-sm text-[#2F3E46]/45 dark:text-[#EAE0D0]/70 leading-relaxed">{v.body}</p>
               </motion.div>
