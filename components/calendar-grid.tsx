@@ -84,9 +84,6 @@ export function CalendarGrid({ year, month, onEventClick, events = [], onPrev, o
   const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-      setViewMode('list')
-    }
     // Track dark mode changes reactively
     const check = () => setIsDark(document.documentElement.classList.contains('dark'))
     check()
